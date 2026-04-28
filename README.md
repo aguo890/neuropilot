@@ -58,4 +58,4 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
 | N1Fusion Link   | Python 3.10+ (NumPy, asyncio), C |
 | Desktop App     | Swift 5.9+, SwiftUI, Apple Metal |
 | Core Decoder    | C++, pybind11 |
-| Assess / Cloud  | Python (FastAPI), React, PostgreSQL, TimescaleDB |
+| Assess / Cloud  | Python (FastAPI), React (TypeScript), PostgreSQL, TimescaleDB |
