@@ -1,0 +1,10 @@
+# AI Directives for NeuroPilot
+
+## Phase Management
+Whenever a development Phase is completed:
+1. You MUST update `docs/roadmap.md` to reflect that the phase is complete and shift the "Current focus" to the next phase.
+2. You MUST update the "Current Status" section in the `README.md` to reflect the newly completed phase and state what the upcoming phase is.
+
+## Architecture Guidelines
+- Always prioritize zero-abstraction, readable code.
+- Provide detailed AI CONTEXT & DOCUMENTATION blocks at the top of new Python/Swift files.
