@@ -4,6 +4,16 @@ import numpy as np
 import logging
 from neural_population import MotorCortexSimulator
 
+# =============================================================================
+# AI CONTEXT & DOCUMENTATION
+# Phase: 1 (Neural Simulator MVP)
+# Purpose: TCP server that streams JSON neural data to the upcoming Swift macOS client.
+# Network: Runs on 127.0.0.1:9000 at 100 Hz (10ms updates).
+# Data Format: newline-delimited JSON stream.
+# Example payload: {"timestamp": 12.34, "kinematics": [0.5, -0.2], "spikes": [5, 12, 12, 45, 99]}
+# Note: The 'spikes' field is a flat list of neuron IDs that fired. If a neuron fires N times, its ID is appended N times.
+# =============================================================================
+
 # Minimal setup for practical visibility
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

@@ -1,5 +1,14 @@
 import numpy as np
 
+# =============================================================================
+# AI CONTEXT & DOCUMENTATION
+# Phase: 1 (Neural Simulator MVP)
+# Purpose: Simulates a population of motor cortex neurons mapping movement to spikes.
+# Algorithm: Cosine-tuning (dot product between preferred direction and movement vector).
+# Downstream: The generated spikes are intended to be decoded by a Swift App in Phase 3.
+# Output: Returns a 1D numpy array of integer spike counts per neuron for a given dt bin.
+# =============================================================================
+
 class MotorCortexSimulator:
     """
     MVP Population Model for Motor Cortex.
