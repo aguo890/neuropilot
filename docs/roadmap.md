@@ -15,7 +15,7 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 |--------|-------|-----------|-------------|
 | 🟢 | **Phase 0** | `Project Init` | Foundational repo, dev environment, and SwiftUI skeleton. |
 | 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Rust library imitating compressed 1Mbps telemetry. |
-| 🟡 | **Phase 2** | `NeuroPilot Desktop` | Native Mac/iOS App: Swift package with BluetoothManager and MetalRenderer. |
+| 🟢 | **Phase 2** | `NeuroPilot Desktop` | Native Mac App: Swift package with NWConnection client and SwiftUI Renderer. |
 | ⚪ | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
 | ⚪ | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
 | ⚪ | **Phase 5** | `NeuroPilot Cloud` | Clinical Dashboard: FastAPI + React + PostgreSQL + TimescaleDB for telemetry. |
@@ -41,13 +41,13 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 - [x] **1.3 Telemetry Stream**: Use `asyncio` to stream JSON packets containing spikes, kinematics, and timestamps at 100 Hz.
 - [ ] **1.4 (Future) Lossless Compression**: Implement a Rust reference encoder using adaptive delta encoding to compress raw electrode data into a 1 Mbps `.brainwire` stream.
 
-### 🟡 Phase 2: `NeuroPilot Desktop` (Low-Latency Mac/iOS App)
+### 🟢 Phase 2: `NeuroPilot Desktop` (Low-Latency Mac App)
 **Goal**: A native Swift package that ingests the telemetry stream and renders a zero-latency cursor based on decoder output.
 
-- [ ] **2.1 Telemetry Client**: Implement `BluetoothManager` (or TCP client `NWConnection`) to connect to the telemetry stream.
-- [ ] **2.2 Data Pipeline**: Define `SpikePacket` and build a `Pipeline` class to hand data off to the bridging header.
-- [ ] **2.3 MetalRenderer**: Build a custom Apple Metal pipeline to draw the cursor bypassing standard UI framework overhead.
-- [ ] **2.4 Basic Layout**: Scaffold `ContentView.swift` with a clean, clinical interface.
+- [x] **2.1 Telemetry Client**: Implement TCP client `NWConnection` to connect to the telemetry stream.
+- [x] **2.2 Data Pipeline**: Define `SpikePacket` and build a `Pipeline` class to hand data off to the bridging header.
+- [x] **2.3 SwiftUI Renderer**: Build a native SwiftUI pipeline to draw the cursor efficiently, deferring Apple Metal for future raster plot implementation.
+- [x] **2.4 Basic Layout**: Scaffold `ContentView.swift` with a clean, clinical interface.
 
 ### ⚪ Phase 3: `NeuroPilot Core` (C++ Decoder Engine)
 **Goal**: The core mathematical engine responsible for the real-time decoding loop, written in C++ for performance.

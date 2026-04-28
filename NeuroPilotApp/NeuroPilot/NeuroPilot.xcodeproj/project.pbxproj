@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A7A46427ED428666C81722A /* TelemetryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C6FF0177CB802E6CF87929 /* TelemetryClient.swift */; };
+		7939FEC4C7FFBA9DFFA5CADE /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E4F3F9D221ABEB1FC77C55 /* Pipeline.swift */; };
+		9842742C20715C8978C8F676 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CB6E9352F6EEA56D08FE6 /* Models.swift */; };
 		FF0000040000000000000000 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000010000000000000000 /* ContentView.swift */; };
 		FF0000050000000000000000 /* NeuroPilotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000020000000000000000 /* NeuroPilotApp.swift */; };
 		FF0000060000000000000000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF0000030000000000000000 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		93C6FF0177CB802E6CF87929 /* TelemetryClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TelemetryClient.swift; sourceTree = "<group>"; };
+		D1E4F3F9D221ABEB1FC77C55 /* Pipeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
 		EA2672552FA03B5D009DB243 /* NeuroPilot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NeuroPilot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F80CB6E9352F6EEA56D08FE6 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		FF0000010000000000000000 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FF0000020000000000000000 /* NeuroPilotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuroPilotApp.swift; sourceTree = "<group>"; };
 		FF0000030000000000000000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -52,6 +58,9 @@
 				FF0000020000000000000000 /* NeuroPilotApp.swift */,
 				FF0000010000000000000000 /* ContentView.swift */,
 				FF0000030000000000000000 /* Assets.xcassets */,
+				F80CB6E9352F6EEA56D08FE6 /* Models.swift */,
+				93C6FF0177CB802E6CF87929 /* TelemetryClient.swift */,
+				D1E4F3F9D221ABEB1FC77C55 /* Pipeline.swift */,
 			);
 			path = NeuroPilot;
 			sourceTree = "<group>";
@@ -123,6 +132,9 @@
 			files = (
 				FF0000040000000000000000 /* ContentView.swift in Sources */,
 				FF0000050000000000000000 /* NeuroPilotApp.swift in Sources */,
+				9842742C20715C8978C8F676 /* Models.swift in Sources */,
+				5A7A46427ED428666C81722A /* TelemetryClient.swift in Sources */,
+				7939FEC4C7FFBA9DFFA5CADE /* Pipeline.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
