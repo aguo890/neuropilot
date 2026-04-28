@@ -2,7 +2,7 @@
 
 A high-performance, open-source framework for building bi-directional brain-computer interface (BCI) applications. 
 
-*Developed by [Aaron Guo](https://www.linkedin.com/in/guo-aaron/) and [Lily Jiang](https://www.linkedin.com/in/lilyhjs/)*
+*Developed by [Aaron Guo](https://www.linkedin.com/in/guo-aaron/) and [Lily Hwang](https://www.linkedin.com/in/lilyhjs/)*
 
 ## The Problem: Digital Isolation & The BCI Bottleneck
 When individuals suffer from severe paralysis (due to ALS, spinal cord injuries, or stroke), their physical bodies can no longer move, but their brains—specifically the motor cortex—are still perfectly capable of intending to move. They become physically and digitally isolated.
