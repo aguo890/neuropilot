@@ -10,7 +10,15 @@ else
     PYTHON_CMD := .venv/bin/python
 endif
 
-.PHONY: push build run run-sim
+.PHONY: setup push build run run-sim
+
+# Setup Environment
+setup: ## 🛠️ Initialize Virtual Environment
+	@echo "🛠️ Creating virtual environment..."
+	@python3 -m venv .venv
+	@echo "📦 Installing dependencies..."
+	@.venv/bin/pip install -r requirements.txt
+	@echo "✅ Setup complete."
 
 # Push to GitHub
 push: ## 🛡️ Auto-commit + Push
@@ -21,7 +29,7 @@ push: ## 🛡️ Auto-commit + Push
 # Build the macOS App
 build: ## 🔨 Build NeuroPilotApp
 	@echo "🔨 Building NeuroPilotApp..."
-	@cd NeuroPilotApp/NeuroPilot && xcodebuild -project NeuroPilot.xcodeproj -scheme NeuroPilot -configuration Debug -derivedDataPath build build
+	@cd NeuroPilotApp/NeuroPilot && xcodebuild -project NeuroPilot.xcodeproj -scheme NeuroPilot -configuration Debug -derivedDataPath build build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
 # Run the macOS App
 run: build ## 🚀 Run NeuroPilotApp
