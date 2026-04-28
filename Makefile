@@ -21,12 +21,12 @@ push: ## 🛡️ Auto-commit + Push
 # Build the macOS App
 build: ## 🔨 Build NeuroPilotApp
 	@echo "🔨 Building NeuroPilotApp..."
-	@cd NeuroPilotApp && xcodebuild -project NeuroPilotApp.xcodeproj -scheme NeuroPilotApp -configuration Debug -derivedDataPath build build
+	@cd NeuroPilotApp/NeuroPilot && xcodebuild -project NeuroPilot.xcodeproj -scheme NeuroPilot -configuration Debug -derivedDataPath build build
 
 # Run the macOS App
 run: build ## 🚀 Run NeuroPilotApp
 	@echo "🚀 Launching NeuroPilotApp..."
-	@open NeuroPilotApp/build/Build/Products/Debug/NeuroPilotApp.app
+	@open NeuroPilotApp/NeuroPilot/build/Build/Products/Debug/NeuroPilot.app
 
 # Run the Neural Simulator
 run-sim: ## 🧠 Run Neural Simulator
