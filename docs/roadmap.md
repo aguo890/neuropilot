@@ -14,7 +14,7 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 | Status | Phase | Module Name | Description |
 |--------|-------|-----------|-------------|
 | 🟢 | **Phase 0** | `Project Init` | Foundational repo, dev environment, and SwiftUI skeleton. |
-| 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Python/C++ library imitating compressed 1Mbps telemetry. |
+| 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Rust library imitating compressed 1Mbps telemetry. |
 | 🟡 | **Phase 2** | `NeuroPilot Desktop` | Native Mac/iOS App: Swift package with BluetoothManager and MetalRenderer. |
 | ⚪ | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
 | ⚪ | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
@@ -34,12 +34,12 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 - [x] **0.5 Write Documentation**: Scaffold `architecture.md`, `roadmap.md`, and `README.md`.
 
 ### 🟢 Phase 1: `N1Fusion Link` (Simulated Hardware Bridge)
-**Goal**: A Python/C++ library that mimics the compressed N1 telemetry stream over TCP/BLE, serving as our project's test harness.
+**Goal**: A Rust library that mimics the compressed N1 telemetry stream over TCP/BLE, serving as our project's test harness.
 
 - [x] **1.1 Neuron Population Model**: Build `MotorCortexSimulator` (N=100) using Cosine-Tuning math to map 2D movement vectors to firing rates.
 - [x] **1.2 Movement Trajectory**: Implement a dynamic Figure-8 kinematic path generator.
 - [x] **1.3 Telemetry Stream**: Use `asyncio` to stream JSON packets containing spikes, kinematics, and timestamps at 100 Hz.
-- [ ] **1.4 (Future) Lossless Compression**: Implement a C reference encoder using adaptive delta encoding to compress raw electrode data into a 1 Mbps `.brainwire` stream.
+- [ ] **1.4 (Future) Lossless Compression**: Implement a Rust reference encoder using adaptive delta encoding to compress raw electrode data into a 1 Mbps `.brainwire` stream.
 
 ### 🟡 Phase 2: `NeuroPilot Desktop` (Low-Latency Mac/iOS App)
 **Goal**: A native Swift package that ingests the telemetry stream and renders a zero-latency cursor based on decoder output.

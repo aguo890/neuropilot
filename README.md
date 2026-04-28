@@ -18,7 +18,7 @@ By engineering this from first principles, it proves that we can achieve the low
 
 NeuroPilot is dedicated to delivering elegant, maintainable, performant, and reliable user-facing software. The architecture spans several cross-functional domains:
 
-- **`N1Fusion Link` (Simulated Hardware Bridge)**: A Python/C++ library that mimics a compressed telemetry stream over TCP/BLE, serving as the project's test harness.
+- **`N1Fusion Link` (Simulated Hardware Bridge)**: A Rust library that mimics a compressed telemetry stream over TCP/BLE, serving as the project's test harness.
 - **`NeuroPilot Desktop` (Low-Latency Mac/iOS App)**: A native Swift package that ingests telemetry streams and renders a zero-latency cursor via a custom Apple Metal pipeline.
 - **`NeuroPilot Core` (C++ Decoder Engine)**: The core mathematical engine (Kalman Filter) written in C++ for maximum performance, exposed via `pybind11` for Python training and bridged to Swift for on-device inference.
 - **`NeuroPilot Assess` (Clinical Calibration)**: Standardized psychomotor tasks (Webgrid clone) built in Swift to gather training data and assess decoder performance in Bits Per Second.
@@ -55,7 +55,7 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
 
 | Component       | Technology              |
 |-----------------|-------------------------|
-| N1Fusion Link   | Python 3.10+ (NumPy, asyncio), C |
+| N1Fusion Link   | Rust, Python 3.10+ (asyncio) |
 | Desktop App     | Swift 5.9+, SwiftUI, Apple Metal |
 | Core Decoder    | C++, pybind11 |
 | Assess / Cloud  | Python (FastAPI), React (TypeScript), PostgreSQL, TimescaleDB |

@@ -43,7 +43,8 @@ When you look beneath the frontend layer, the languages and frameworks used for 
 This cross-industry analysis validates our architecture. The NeuroPilot blueprint accurately mirrors the gold standard. The key insight from this broader look is that the foundation of our system—the `N1Fusion Link`—must be **modular**. Building our architecture so that the `N1Fusion Link` module can be swapped out for a `BISC Bridge` or a `Blackrock CerePlex` connector in the future is a forward-thinking design choice.
 
 The universal norms NeuroPilot doubles down on are:
-*   **C++/Rust for the `NeuroPilot Core` decoder.**
+*   **Rust for the `N1Fusion Link` data ingress and safety-critical parsing.**
+*   **C++ for the `NeuroPilot Core` decoder (leveraging battle-tested math libraries).**
 *   **Swift for the `NeuroPilot Desktop` app.**
 *   **React (TypeScript) + Python (FastAPI) for the `NeuroPilot Cloud` dashboard.**
 

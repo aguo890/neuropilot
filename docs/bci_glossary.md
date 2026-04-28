@@ -18,15 +18,15 @@ If you are new to the field, this glossary breaks down the core concepts and exp
 ## ⚡ Hardware & Data Acquisition
 
 - **Microelectrode Array (MEA)**: A physical grid of tiny microscopic electrodes implanted directly into brain tissue to record the electrical activity of nearby neurons. 
-- **Threshold Crossing**: The physical array records continuous analog voltage. A "threshold crossing" occurs when that voltage sharply spikes above a predefined limit, signifying that a neuron has fired. Our Python simulator skips the analog voltage processing step and directly outputs these threshold crossings as discrete spike IDs.
-- **Telemetry**: The process of wirelessly transmitting the recorded neural data from the implant to an external receiver (like a phone or computer). Our `asyncio` TCP server mimics this real-time, low-latency telemetry data stream.
+- **Threshold Crossing**: The physical array records continuous analog voltage. A "threshold crossing" occurs when that voltage sharply spikes above a predefined limit, signifying that a neuron has fired. Our `N1Fusion Link` simulator skips the analog voltage processing step and directly outputs these threshold crossings as discrete spike IDs.
+- **Telemetry**: The process of wirelessly transmitting the recorded neural data from the implant to an external receiver (like a phone or computer). Our simulated telemetry stream mimics this real-time, low-latency data transmission.
 
 ---
 
 ## 🧮 Algorithms & Decoding
 
 - **Cosine Tuning**: A mathematical model used to simulate a neuron's firing rate based on movement direction. It calculates the dot product between the intended movement vector and the neuron's preferred direction. Our simulator uses this model to realistically generate synthetic spikes.
-- **Decoder**: The core algorithm in the Swift application responsible for translating raw incoming neural spikes back into a predicted movement intent (e.g., moving a cursor).
+- **Decoder**: The core C++ engine (`NeuroPilot Core`) responsible for translating raw incoming neural spikes back into a predicted movement intent (e.g., moving a cursor).
 - **Population Vector**: A fundamental decoding algorithm. It takes the preferred direction of every neuron, scales each by how many times that neuron fired in the current time bin, and sums them all together to calculate the user's intended movement.
 - **Kalman Filter**: An advanced, statistically optimal decoding algorithm. It uses both the current neural spikes and the *previous* state of the cursor (velocity/position) to smoothly and accurately predict the next movement. It handles neurological noise much better than a Population Vector.
 

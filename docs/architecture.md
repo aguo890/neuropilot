@@ -1,17 +1,17 @@
 # Architecture Overview
 
-Simulator (Python) --[TCP JSON]--> SwiftApp --[Decoder]--> Cursor/UI
+`N1Fusion Link` (Rust) --[BLE/TCP JSON]--> `NeuroPilot Desktop` (Swift) --[`NeuroPilot Core` (C++)]--> Cursor/UI (Metal)
 
 ## High-Level Data Flow
 
-1. **Simulator (Python)**: Generates synthetic motor cortex spike trains. It runs a TCP server that emits JSON packets containing spike data at 100 Hz.
-2. **SwiftApp**: Native macOS app built with Swift and SwiftUI. It connects to the simulator via TCP, reads the JSON packets, and processes the spike data.
-3. **Decoder**: Transforms the incoming neural spikes into movement commands (e.g., using a Population Vector or Kalman Filter).
-4. **Cursor/UI**: Updates the application interface (such as moving a cursor) based on the decoded movement commands in real-time.
+1. **`N1Fusion Link` (Data Ingress & Simulation)**: Written in Rust. It generates synthetic motor cortex spike trains or parses raw hardware telemetry, acting as a safety-critical parser and server that emits data packets at 100 Hz.
+2. **`NeuroPilot Desktop` (Native Client)**: Native macOS/iOS app built with Swift. It connects to the N1Fusion Link, manages the Bluetooth/TCP connection, and handles high-performance zero-latency UI rendering via Apple Metal.
+3. **`NeuroPilot Core` (Decoder Engine)**: Written in C++. Transforms the incoming neural spikes into continuous movement commands using mathematical models (e.g. Kalman Filter). Exposed to Swift via a bridging header.
+4. **`NeuroPilot Assess` & `Cloud`**: Swift-based clinical tasks (Assess) generate session logs which are uploaded to a React (TypeScript) and FastAPI (Python) dashboard (Cloud) for remote metrics tracking.
 
 ## Data Stream Schema
 
-Each newline-delimited JSON packet streaming from the Python Simulator represents a 10ms simulation bin.
+Each newline-delimited JSON packet streaming from the `N1Fusion Link` represents a 10ms simulation bin.
 
 **Example Payload:**
 ```json
@@ -31,18 +31,11 @@ neuropilot/
 ├── docs/
 │   ├── architecture.md
 │   ├── bci_glossary.md
+│   ├── industry_comparison.md
 │   └── roadmap.md
-├── simulator/
-│   ├── main.py
-│   ├── neural_population.py
-│   └── tcp_server.py
-├── NeuroPilotApp/
-│   ├── NeuroPilot.xcodeproj
-│   └── NeuroPilot/
-│       ├── AppDelegate.swift
-│       ├── ContentView.swift
-│       ├── SpikeReceiver.swift
-│       ├── Decoder/
-│       └── UI/
-└── dashboard/ (future)
+├── n1fusion_link/        (Phase 1: Rust Ingress/Simulator)
+├── neuropilot_desktop/   (Phase 2: Swift App & Metal UI)
+├── neuropilot_core/      (Phase 3: C++ Decoder Engine)
+├── neuropilot_assess/    (Phase 4: Clinical Calibration Tasks)
+└── neuropilot_cloud/     (Phase 5: FastAPI/React Dashboard)
 ```
