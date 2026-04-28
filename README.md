@@ -2,7 +2,15 @@
 
 A high-performance, open-source framework for building bi-directional brain-computer interface (BCI) applications. 
 
-NeuroPilot is engineered from first principles to provide a reliable, low-latency pipeline that bridges raw neural signal telemetry with native application interfaces. Our core mission is to provide a robust software architecture that can be deployed in clinical environments to help restore movement to the paralyzed, enabling users to control computers, phones, and digital agents with their minds at the speed of thought.
+## The Problem: Digital Isolation & The BCI Bottleneck
+When individuals suffer from severe paralysis (due to ALS, spinal cord injuries, or stroke), their physical bodies can no longer move, but their brains—specifically the motor cortex—are still perfectly capable of intending to move. They become physically and digitally isolated.
+
+Implanting a microelectrode array into the brain intercepts those movement intentions as a massive stream of raw electrical noise (spikes). **The core engineering challenge** is turning that chaotic waterfall of data into a smooth, instantaneous mouse click on a screen. If the software pipeline lags, drops packets, or uses too much memory, the UI stutters and the user experience is ruined.
+
+## How NeuroPilot Solves It
+NeuroPilot is engineered from first principles to provide a reliable, end-to-end software architecture that bridges raw neural signal telemetry with native application interfaces. It proves that we can achieve the low-latency concurrency required to decode raw data fast enough to provide a seamless user experience.
+
+Our mission is to provide a robust framework that can be deployed in clinical environments to help restore movement to the paralyzed, enabling users to control computers, phones, and digital agents with their minds at the speed of thought.
 
 **Built for the Clinic**: Designed to support fast iteration cycles, NeuroPilot empowers engineering teams to work closely with clinical trial participants to test novel computer user interfaces and rapidly refine brain control experiences based on direct user feedback.
 
@@ -15,10 +23,13 @@ NeuroPilot is dedicated to delivering elegant, maintainable, performant, and rel
 - **Signal Decoder**: Designs and implements algorithms to decode brain activity (Population Vector / Kalman Filter) optimized natively via Apple's Accelerate framework.
 - **Clinical Dashboard (Future)**: Full-stack metrics and session logging to track clinical tasks, validate software systems, and measure user performance metrics.
 
-> 🧠 **New to BCIs?** Check out the [BCI Glossary & Domain Knowledge](docs/bci_glossary.md) guide to understand the terminology and neuroscience concepts used in this project.
+## Documentation & Resources
 
-## Project Roadmap
-Please refer to [docs/roadmap.md](docs/roadmap.md) for a detailed, step-by-step 8-phase plan of the project architecture and upcoming milestones.
+For a deep dive into the project's design, terminology, and future plans, please refer to our dedicated documentation:
+
+- 🧠 **[BCI Glossary & Domain Knowledge](docs/bci_glossary.md)**: A beginner-friendly guide to the neuroscience, hardware, and algorithmic terminology used in this project (e.g., motor cortex, spikes, Kalman filters).
+- ⚙️ **[Architecture & Data Specs](docs/architecture.md)**: Details the high-level data flow, network topology, and the exact JSON payload schema streaming from the simulator.
+- 🗺️ **[Project Roadmap](docs/roadmap.md)**: A detailed, step-by-step 8-phase master plan outlining upcoming milestones, features, and the current state of the end-to-end system.
 
 ## Current Status: Phase 1 Complete
 We have successfully implemented the **Neural Simulator MVP**. The simulator delivers a continuous, high-fidelity stream of synthetic neural spikes over a TCP socket at 100 Hz, mimicking the telemetry of a real implanted BCI device.
@@ -38,20 +49,6 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
    ```
    You will see a continuous 100 Hz stream of JSON packets.
 
-### Data Stream Schema
-
-Each newline-delimited JSON packet represents a 10ms simulation bin.
-
-**Example Payload:**
-```json
-{"timestamp": 83262.479885916, "kinematics": [-0.7511403567705126, 0.9917193961455366], "spikes": [2, 5, 19, 20, 31, 46, 49, 57, 66, 66, 69, 80, 90, 91, 94]}
-```
-
-**Field Dictionary:**
-- `timestamp` *(float)*: The exact simulator event loop time (in seconds) when this packet was generated. Used downstream to measure end-to-end system latency.
-- `kinematics` *(array of floats)*: The actual intended 2D movement vector `[vx, vy]` at this point in time (following a Figure-8 trajectory). This represents the "ground truth" movement intention. Downstream clinical dashboards use this alongside the decoded movement to calculate decoding error metrics.
-- `spikes` *(array of ints)*: A flat array containing the IDs of the neurons that fired during this 10ms bin. If a highly active neuron (like ID `66`) fires twice in the bin, its ID appears twice. This accurately mimics raw threshold crossings detected by a physical microelectrode array.
-
 ## Tech Stack
 
 | Component       | Technology              |
@@ -68,6 +65,7 @@ neuropilot/
 ├── README.md
 ├── docs/
 │   ├── architecture.md
+│   ├── bci_glossary.md
 │   └── roadmap.md
 ├── simulator/
 │   ├── main.py
