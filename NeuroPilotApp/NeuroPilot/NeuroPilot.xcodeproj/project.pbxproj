@@ -10,6 +10,12 @@
 		FF0000040000000000000000 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000010000000000000000 /* ContentView.swift */; };
 		FF0000050000000000000000 /* NeuroPilotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000020000000000000000 /* NeuroPilotApp.swift */; };
 		FF0000060000000000000000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF0000030000000000000000 /* Assets.xcassets */; };
+		FF0000100000000000000000 /* SpikePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000100000000000000001 /* SpikePacket.swift */; };
+		FF0000110000000000000000 /* TCPTelemetryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000110000000000000001 /* TCPTelemetryClient.swift */; };
+		FF0000120000000000000000 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000120000000000000001 /* DashboardViewModel.swift */; };
+		FF0000130000000000000000 /* RasterPlotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000130000000000000001 /* RasterPlotView.swift */; };
+		FF0000140000000000000000 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000140000000000000001 /* BluetoothManager.swift */; };
+		FF0000150000000000000000 /* TelemetryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000150000000000000001 /* TelemetryProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +23,12 @@
 		FF0000010000000000000000 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FF0000020000000000000000 /* NeuroPilotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuroPilotApp.swift; sourceTree = "<group>"; };
 		FF0000030000000000000000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FF0000100000000000000001 /* SpikePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpikePacket.swift; sourceTree = "<group>"; };
+		FF0000110000000000000001 /* TCPTelemetryClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPTelemetryClient.swift; sourceTree = "<group>"; };
+		FF0000120000000000000001 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		FF0000130000000000000001 /* RasterPlotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterPlotView.swift; sourceTree = "<group>"; };
+		FF0000140000000000000001 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		FF0000150000000000000001 /* TelemetryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +64,12 @@
 				FF0000020000000000000000 /* NeuroPilotApp.swift */,
 				FF0000010000000000000000 /* ContentView.swift */,
 				FF0000030000000000000000 /* Assets.xcassets */,
+				FF0000100000000000000001 /* SpikePacket.swift */,
+				FF0000110000000000000001 /* TCPTelemetryClient.swift */,
+				FF0000120000000000000001 /* DashboardViewModel.swift */,
+				FF0000130000000000000001 /* RasterPlotView.swift */,
+				FF0000140000000000000001 /* BluetoothManager.swift */,
+				FF0000150000000000000001 /* TelemetryProtocol.swift */,
 			);
 			path = NeuroPilot;
 			sourceTree = "<group>";
@@ -123,6 +141,12 @@
 			files = (
 				FF0000040000000000000000 /* ContentView.swift in Sources */,
 				FF0000050000000000000000 /* NeuroPilotApp.swift in Sources */,
+				FF0000100000000000000000 /* SpikePacket.swift in Sources */,
+				FF0000110000000000000000 /* TCPTelemetryClient.swift in Sources */,
+				FF0000120000000000000000 /* DashboardViewModel.swift in Sources */,
+				FF0000130000000000000000 /* RasterPlotView.swift in Sources */,
+				FF0000140000000000000000 /* BluetoothManager.swift in Sources */,
+				FF0000150000000000000000 /* TelemetryProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +207,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "NeuroPilot needs Bluetooth to connect to neural telemetry hardware.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -207,6 +232,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "NeuroPilot needs Bluetooth to connect to neural telemetry hardware.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

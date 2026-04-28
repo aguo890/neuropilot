@@ -10,7 +10,11 @@ else
     PYTHON_CMD := .venv/bin/python
 endif
 
-.PHONY: setup push build run run-sim
+.PHONY: setup push build run run-sim help clean
+
+# 🆘 Help
+help: ## ℹ️ Show this help message
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 # Setup Environment
 setup: ## 🛠️ Initialize Virtual Environment
@@ -33,6 +37,8 @@ build: ## 🔨 Build NeuroPilotApp
 
 # Run the macOS App
 run: build ## 🚀 Run NeuroPilotApp
+	@echo "🛑 Stopping any running instances..."
+	@pkill NeuroPilot || true
 	@echo "🚀 Launching NeuroPilotApp..."
 	@open NeuroPilotApp/NeuroPilot/build/Build/Products/Debug/NeuroPilot.app
 
@@ -40,3 +46,9 @@ run: build ## 🚀 Run NeuroPilotApp
 run-sim: ## 🧠 Run Neural Simulator
 	@echo "🧠 Starting Neural Simulator..."
 	@$(PYTHON_CMD) simulator/main.py
+
+# Clean Build Artifacts
+clean: ## 🧹 Clean build artifacts
+	@echo "🧹 Cleaning..."
+	@rm -rf NeuroPilotApp/NeuroPilot/build
+	@echo "✅ Cleaned."
