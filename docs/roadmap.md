@@ -16,6 +16,7 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 | 🟢 | **Phase 0** | `Project Init` | Foundational repo, dev environment, and SwiftUI skeleton. |
 | 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Rust library imitating compressed 1Mbps telemetry. |
 | 🟢 | **Phase 2** | `NeuroPilot Desktop` | Native Mac App: Swift package with NWConnection client and SwiftUI Renderer. |
+| ⚪ | **Phase 2.1**| `Data Acquisition` | Sourcing real iBCI datasets (FALCON, Sabes lab) for real-world simulation and offline decoding analysis. |
 | ⚪ | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
 | ⚪ | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
 | ⚪ | **Phase 5** | `NeuroPilot Cloud` | Clinical Dashboard: FastAPI + React + PostgreSQL + TimescaleDB for telemetry. |
@@ -48,6 +49,13 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 - [x] **2.2 Data Pipeline**: Define `SpikePacket` and build a `Pipeline` class to hand data off to the bridging header.
 - [x] **2.3 SwiftUI Renderer**: Build a native SwiftUI pipeline to draw the cursor efficiently, deferring Apple Metal for future raster plot implementation.
 - [x] **2.4 Basic Layout**: Scaffold `ContentView.swift` with a clean, clinical interface.
+
+### ⚪ Phase 2.1: `Data Acquisition` (Real-world Data Pipeline)
+**Goal**: Retrieve rich, high-quality, pre-recorded neural datasets to drive the simulator with real physiological noise and prepare for offline decoding analysis.
+
+- [ ] **2.1.1 Identify Datasets**: Pinpoint specific `.nwb` or `.mat` data streams from the FALCON Benchmark (iBCI tasks) and Sabes Lab datasets.
+- [ ] **2.1.2 Download & Store**: Download sample datasets into the `datasets/` directory (tracked via `.gitignore`).
+- [ ] **2.1.3 Simulator Playback**: Modify the Python `simulator/main.py` loop to parse and broadcast the real-world dataset instead of the mathematical `MotorCortexSimulator`.
 
 ### ⚪ Phase 3: `NeuroPilot Core` (C++ Decoder Engine)
 **Goal**: The core mathematical engine responsible for the real-time decoding loop, written in C++ for performance.
