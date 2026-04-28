@@ -1,24 +1,27 @@
 # NeuroPilot
 
-A native macOS application that demonstrates real-time brain-computer interface control.  
-Simulated neural signals are decoded into cursor movement, enabling a "mind-controlled" computer interface — built with the same engineering principles used by clinical BCI systems.
+A high-performance, open-source framework for building bi-directional brain-computer interface (BCI) applications. 
 
-**Motivation**: Showcase the full pipeline of a BCI application, from neural signal simulation to low‑latency decoding and user‑centric UI design, for the Neuralink BCI Applications team.
+NeuroPilot is engineered from first principles to provide a reliable, low-latency pipeline that bridges raw neural signal telemetry with native application interfaces. Our core mission is to provide a robust software architecture that can be deployed in clinical environments to help restore movement to the paralyzed, enabling users to control computers, phones, and digital agents with their minds at the speed of thought.
+
+**Built for the Clinic**: Designed to support fast iteration cycles, NeuroPilot empowers engineering teams to work closely with clinical trial participants to test novel computer user interfaces and rapidly refine brain control experiences based on direct user feedback.
 
 ## Architecture Overview
 
-- **Neural Simulator** (Python) – generates synthetic motor cortex spike trains over TCP  
-- **Native macOS App** (Swift + SwiftUI) – receives spikes, runs decoder, drives UI  
-- **Decoder** – Population Vector (v1) / Kalman Filter (v2), optimized with Accelerate  
-- **Metrics & Web Dashboard** (future) – session logging and performance visualization  
+NeuroPilot is dedicated to delivering elegant, maintainable, performant, and reliable user-facing software. The architecture spans several cross-functional domains:
+
+- **Neural Simulator (Python)**: A highly concurrent `asyncio` TCP server that generates synthetic motor cortex spike trains via a robust mathematical population model.
+- **Native macOS/iOS App (Swift + SwiftUI)**: A native application that delivers exceptional user experiences centered around brain control. Employs low-latency networking, concurrent programming, and strict memory management to receive continuous spike streams in real-time.
+- **Signal Decoder**: Designs and implements algorithms to decode brain activity (Population Vector / Kalman Filter) optimized natively via Apple's Accelerate framework.
+- **Clinical Dashboard (Future)**: Full-stack metrics and session logging to track clinical tasks, validate software systems, and measure user performance metrics.
 
 ## Project Roadmap
 Please refer to [docs/roadmap.md](docs/roadmap.md) for a detailed, step-by-step 8-phase plan of the project architecture and upcoming milestones.
 
 ## Current Status: Phase 1 Complete
-We have successfully implemented the **Neural Simulator MVP**. The simulator generates synthetic motor cortex spike trains via a mathematical cosine-tuning population model and streams the data over a TCP socket at 100 Hz.
+We have successfully implemented the **Neural Simulator MVP**. The simulator delivers a continuous, high-fidelity stream of synthetic neural spikes over a TCP socket at 100 Hz, mimicking the telemetry of a real implanted BCI device.
 
-**Next Phase (Phase 2):** Building the native macOS app skeleton (SwiftUI) and implementing the TCP client to receive the neural spikes and display a real-time raster plot.
+**Next Phase (Phase 2):** Building the native macOS app skeleton (SwiftUI) and implementing the asynchronous TCP client to receive the neural spikes and display a real-time raster plot.
 
 ## Quick Start (Simulator)
 
@@ -38,11 +41,11 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator gen
 | Component       | Technology              |
 |-----------------|-------------------------|
 | Neural Sim      | Python 3.10+ (NumPy, asyncio) |
-| Desktop App     | Swift 5.9+, SwiftUI, Combine, Network framework |
+| Native Client   | Swift 5.9+, SwiftUI, Combine, Network framework |
 | Decoder         | Swift + Accelerate framework |
-| Dashboard (opt) | React + Node.js + SQLite |
+| Clinical Dash   | React + Node.js + SQLite |
 
-## Repository Structure (planned)
+## Repository Structure (Planned)
 
 ```text
 neuropilot/
@@ -55,8 +58,8 @@ neuropilot/
 │   ├── neural_population.py
 │   └── tcp_server.py
 ├── NeuroPilotApp/
-│   ├── NeuroPilotApp.xcodeproj
-│   └── NeuroPilotApp/
+│   ├── NeuroPilot.xcodeproj
+│   └── NeuroPilot/
 │       ├── AppDelegate.swift
 │       ├── ContentView.swift
 │       ├── SpikeReceiver.swift
