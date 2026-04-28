@@ -8,11 +8,11 @@ When individuals suffer from severe paralysis (due to ALS, spinal cord injuries,
 Implanting a microelectrode array into the brain intercepts those movement intentions as a massive stream of raw electrical noise (spikes). **The core engineering challenge** is turning that chaotic waterfall of data into a smooth, instantaneous mouse click on a screen. If the software pipeline lags, drops packets, or uses too much memory, the UI stutters and the user experience is ruined.
 
 ## How NeuroPilot Solves It
-NeuroPilot is engineered from first principles to provide a reliable, end-to-end software architecture that bridges raw neural signal telemetry with native application interfaces. It proves that we can achieve the low-latency concurrency required to decode raw data fast enough to provide a seamless user experience.
+NeuroPilot is designed as a foundational, open-source framework for the BCI engineering community. Rather than a closed ecosystem, it is built to easily plug into and integrate with existing brain telemetry hardware streams (from any microelectrode array) and provides highly modular logic for decoding algorithms and clinical dashboards.
 
-Our mission is to provide a robust framework that can be deployed in clinical environments to help restore movement to the paralyzed, enabling users to control computers, phones, and digital agents with their minds at the speed of thought.
+By engineering this from first principles, it proves that we can achieve the low-latency concurrency required to decode raw data fast enough to provide a seamless user experience. Our mission is to provide a robust, drop-in architecture that can be deployed in clinical environments to help restore movement to the paralyzed—enabling users to control computers, phones, and digital agents with their minds at the speed of thought.
 
-**Built for the Clinic**: Designed to support fast iteration cycles, NeuroPilot empowers engineering teams to work closely with clinical trial participants to test novel computer user interfaces and rapidly refine brain control experiences based on direct user feedback.
+**Built for the Clinic**: Designed to support fast iteration cycles, NeuroPilot empowers engineering teams to rapidly swap out modular dashboards or decoding logic. This allows researchers to work closely with clinical trial participants, test novel computer user interfaces, and refine brain control experiences based on direct user feedback.
 
 ## Architecture Overview
 
@@ -57,27 +57,3 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
 | Native Client   | Swift 5.9+, SwiftUI, Combine, Network framework |
 | Decoder         | Swift + Accelerate framework |
 | Clinical Dash   | React + Node.js + SQLite |
-
-## Repository Structure (Planned)
-
-```text
-neuropilot/
-├── README.md
-├── docs/
-│   ├── architecture.md
-│   ├── bci_glossary.md
-│   └── roadmap.md
-├── simulator/
-│   ├── main.py
-│   ├── neural_population.py
-│   └── tcp_server.py
-├── NeuroPilotApp/
-│   ├── NeuroPilot.xcodeproj
-│   └── NeuroPilot/
-│       ├── AppDelegate.swift
-│       ├── ContentView.swift
-│       ├── SpikeReceiver.swift
-│       ├── Decoder/
-│       └── UI/
-└── dashboard/ (future)
-```

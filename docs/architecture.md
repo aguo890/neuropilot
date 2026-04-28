@@ -22,3 +22,27 @@ Each newline-delimited JSON packet streaming from the Python Simulator represent
 - `timestamp` *(float)*: The exact simulator event loop time (in seconds) when this packet was generated. Used downstream to measure end-to-end system latency.
 - `kinematics` *(array of floats)*: The actual intended 2D movement vector `[vx, vy]` at this point in time (following a Figure-8 trajectory). This represents the "ground truth" movement intention. Downstream clinical dashboards use this alongside the decoded movement to calculate decoding error metrics.
 - `spikes` *(array of ints)*: A flat array containing the IDs of the neurons that fired during this 10ms bin. If a highly active neuron (like ID `66`) fires twice in the bin, its ID appears twice. This accurately mimics raw threshold crossings detected by a physical microelectrode array.
+
+## Repository Structure (Planned)
+
+```text
+neuropilot/
+├── README.md
+├── docs/
+│   ├── architecture.md
+│   ├── bci_glossary.md
+│   └── roadmap.md
+├── simulator/
+│   ├── main.py
+│   ├── neural_population.py
+│   └── tcp_server.py
+├── NeuroPilotApp/
+│   ├── NeuroPilot.xcodeproj
+│   └── NeuroPilot/
+│       ├── AppDelegate.swift
+│       ├── ContentView.swift
+│       ├── SpikeReceiver.swift
+│       ├── Decoder/
+│       └── UI/
+└── dashboard/ (future)
+```
