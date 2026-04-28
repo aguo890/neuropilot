@@ -18,10 +18,11 @@ By engineering this from first principles, it proves that we can achieve the low
 
 NeuroPilot is dedicated to delivering elegant, maintainable, performant, and reliable user-facing software. The architecture spans several cross-functional domains:
 
-- **Neural Simulator (Python)**: A highly concurrent `asyncio` TCP server that generates synthetic motor cortex spike trains via a robust mathematical population model.
-- **Native macOS/iOS App (Swift + SwiftUI)**: A native application that delivers exceptional user experiences centered around brain control. Employs low-latency networking, concurrent programming, and strict memory management to receive continuous spike streams in real-time.
-- **Signal Decoder**: Designs and implements algorithms to decode brain activity (Population Vector / Kalman Filter) optimized natively via Apple's Accelerate framework.
-- **Clinical Dashboard (Future)**: Full-stack metrics and session logging to track clinical tasks, validate software systems, and measure user performance metrics.
+- **`N1Fusion Link` (Simulated Hardware Bridge)**: A Python/C++ library that mimics a compressed telemetry stream over TCP/BLE, serving as the project's test harness.
+- **`NeuroPilot Desktop` (Low-Latency Mac/iOS App)**: A native Swift package that ingests telemetry streams and renders a zero-latency cursor via a custom Apple Metal pipeline.
+- **`NeuroPilot Core` (C++ Decoder Engine)**: The core mathematical engine (Kalman Filter) written in C++ for maximum performance, exposed via `pybind11` for Python training and bridged to Swift for on-device inference.
+- **`NeuroPilot Assess` (Clinical Calibration)**: Standardized psychomotor tasks (Webgrid clone) built in Swift to gather training data and assess decoder performance in Bits Per Second.
+- **`NeuroPilot Cloud` (Clinical Dashboard)**: A modern full-stack web dashboard (FastAPI + React) backed by PostgreSQL and TimescaleDB for remote session logging and clinical review.
 
 ## Documentation & Resources
 
@@ -29,7 +30,7 @@ For a deep dive into the project's design, terminology, and future plans, please
 
 - 🧠 **[BCI Glossary & Domain Knowledge](docs/bci_glossary.md)**: A beginner-friendly guide to the neuroscience, hardware, and algorithmic terminology used in this project (e.g., motor cortex, spikes, Kalman filters).
 - ⚙️ **[Architecture & Data Specs](docs/architecture.md)**: Details the high-level data flow, network topology, and the exact JSON payload schema streaming from the simulator.
-- 🗺️ **[Project Roadmap](docs/roadmap.md)**: A detailed, step-by-step 8-phase master plan outlining upcoming milestones, features, and the current state of the end-to-end system.
+- 🗺️ **[Project Roadmap](docs/roadmap.md)**: A detailed, step-by-step 5-phase master plan outlining upcoming milestones, features, and the current state of the end-to-end system.
 
 ## Current Status: Phase 1 Complete
 We have successfully implemented the **Neural Simulator MVP**. The simulator delivers a continuous, high-fidelity stream of synthetic neural spikes over a TCP socket at 100 Hz, mimicking the telemetry of a real implanted BCI device.
@@ -53,7 +54,7 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
 
 | Component       | Technology              |
 |-----------------|-------------------------|
-| Neural Sim      | Python 3.10+ (NumPy, asyncio) |
-| Native Client   | Swift 5.9+, SwiftUI, Combine, Network framework |
-| Decoder         | Swift + Accelerate framework |
-| Clinical Dash   | React + Node.js + SQLite |
+| N1Fusion Link   | Python 3.10+ (NumPy, asyncio), C |
+| Desktop App     | Swift 5.9+, SwiftUI, Apple Metal |
+| Core Decoder    | C++, pybind11 |
+| Assess / Cloud  | Python (FastAPI), React, PostgreSQL, TimescaleDB |

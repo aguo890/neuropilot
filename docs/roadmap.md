@@ -11,17 +11,14 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 
 ## 🎯 High-Level Milestones
 
-| Status | Phase | Milestone | Description |
+| Status | Phase | Module Name | Description |
 |--------|-------|-----------|-------------|
-| 🟢 | **Phase 0** | Project Initialization | Foundational repo, dev environment, and SwiftUI skeleton. |
-| 🟢 | **Phase 1** | Neural Simulator MVP | Python TCP server emitting realistic spike telemetry. |
-| 🟡 | **Phase 2** | Native macOS Skeleton + TCP | Swift App receives spikes, decodes, and plots raster. |
-| ⚪ | **Phase 3** | Basic Decoder & Cursor | Population vector decoding to move a cursor on canvas. |
-| ⚪ | **Phase 4** | Calibration & Metrics | Training routine to gather data + performance stats. |
-| ⚪ | **Phase 5** | Advanced Decoder | Kalman filter implementation natively with Apple Accelerate. |
-| ⚪ | **Phase 6** | UX Polish & Clinical Tasks | Target-click tasks, confidence indicators for user testing. |
-| ⚪ | **Phase 7** | Full-Stack Dashboard | Web viewer for session data logging and metrics. |
-| ⚪ | **Phase 8** | Simulated User Study | Quantitative metrics tracking and video demonstration. |
+| 🟢 | **Phase 0** | `Project Init` | Foundational repo, dev environment, and SwiftUI skeleton. |
+| 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Python/C++ library imitating compressed 1Mbps telemetry. |
+| 🟡 | **Phase 2** | `NeuroPilot Desktop` | Native Mac/iOS App: Swift package with BluetoothManager and MetalRenderer. |
+| ⚪ | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
+| ⚪ | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
+| ⚪ | **Phase 5** | `NeuroPilot Cloud` | Clinical Dashboard: FastAPI + React + PostgreSQL + TimescaleDB for telemetry. |
 
 ---
 
@@ -36,21 +33,39 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 - [x] **0.4 Initialize SwiftUI App**: Clean build of native macOS App (SwiftUI, no Core Data).
 - [x] **0.5 Write Documentation**: Scaffold `architecture.md`, `roadmap.md`, and `README.md`.
 
-### 🟢 Phase 1: Neural Simulator MVP
-**Goal**: A highly concurrent Python server streaming synthetic motor cortex spike data over TCP at 100 Hz.
+### 🟢 Phase 1: `N1Fusion Link` (Simulated Hardware Bridge)
+**Goal**: A Python/C++ library that mimics the compressed N1 telemetry stream over TCP/BLE, serving as our project's test harness.
 
 - [x] **1.1 Neuron Population Model**: Build `MotorCortexSimulator` (N=100) using Cosine-Tuning math to map 2D movement vectors to firing rates.
 - [x] **1.2 Movement Trajectory**: Implement a dynamic Figure-8 kinematic path generator.
-- [x] **1.3 TCP Server**: Use `asyncio` to stream JSON packets containing spikes, kinematics, and timestamps at 100 Hz.
-- [x] **1.4 Test Connectivity**: Verify simulator stream independently via `netcat`.
+- [x] **1.3 Telemetry Stream**: Use `asyncio` to stream JSON packets containing spikes, kinematics, and timestamps at 100 Hz.
+- [ ] **1.4 (Future) Lossless Compression**: Implement a C reference encoder using adaptive delta encoding to compress raw electrode data into a 1 Mbps `.brainwire` stream.
 
-### 🟡 Phase 2: Native Mac App Skeleton + TCP Client
-**Goal**: The Swift application connects to the simulator, receives spikes, and displays a live raster plot as proof of data flow.
+### 🟡 Phase 2: `NeuroPilot Desktop` (Low-Latency Mac/iOS App)
+**Goal**: A native Swift package that ingests the telemetry stream and renders a zero-latency cursor based on decoder output.
 
-- [ ] **2.1 TCP Client (Swift)**: Use `NWConnection` (Network framework) to connect to `localhost:9000`.
-- [ ] **2.2 Data Model**: Define `SpikePacket` and parse the incoming JSON stream.
-- [ ] **2.3 Raster View**: Build a high-performance `TimelineView` + `Canvas` to plot spikes in real-time (20+ Hz refresh rate).
-- [ ] **2.4 E2E Testing**: Start simulator, run app, and verify visual raster syncs with network packets.
-- [ ] **2.5 Basic Layout**: Scaffold `ContentView.swift` with a left pane (Raster), right pane (Cursor Canvas), and bottom Status Bar.
+- [ ] **2.1 Telemetry Client**: Implement `BluetoothManager` (or TCP client `NWConnection`) to connect to the telemetry stream.
+- [ ] **2.2 Data Pipeline**: Define `SpikePacket` and build a `Pipeline` class to hand data off to the bridging header.
+- [ ] **2.3 MetalRenderer**: Build a custom Apple Metal pipeline to draw the cursor bypassing standard UI framework overhead.
+- [ ] **2.4 Basic Layout**: Scaffold `ContentView.swift` with a clean, clinical interface.
 
-*(Phases 3-8 task breakdowns will be expanded as we approach them.)*
+### ⚪ Phase 3: `NeuroPilot Core` (C++ Decoder Engine)
+**Goal**: The core mathematical engine responsible for the real-time decoding loop, written in C++ for performance.
+
+- [ ] **3.1 C++ Kalman Filter**: Implement a 2D velocity prediction Kalman Filter in native C++.
+- [ ] **3.2 Python Bindings**: Expose the C++ module via `pybind11` to allow rapid algorithm iteration using PyTorch/NumPy.
+- [ ] **3.3 Swift Bridging**: Create an Objective-C++ bridging header to expose the decoder to `NeuroPilot Desktop` for on-device inference.
+
+### ⚪ Phase 4: `NeuroPilot Assess` (Clinical Calibration Task)
+**Goal**: Standardized psychomotor tasks to gather training data and assess decoder performance (Bits Per Second).
+
+- [ ] **4.1 Webgrid Game**: Build a Swift-based configurable center-out grid task.
+- [ ] **4.2 Session Logging**: Log every target onset, hit/miss, and calculated BPS score to a local JSON file.
+- [ ] **4.3 Offline Analysis Tools**: Write Python scripts to read JSON logs, graph performance, and identify low-confidence clusters requiring recalibration.
+
+### ⚪ Phase 5: `NeuroPilot Cloud` (Clinical Data Dashboard)
+**Goal**: A modern full-stack web dashboard for remote session logging and clinical review.
+
+- [ ] **5.1 Database Schema**: Set up PostgreSQL with the TimescaleDB extension for time-series performance metrics.
+- [ ] **5.2 Cloud ETL Pipeline**: Build a FastAPI Python backend to receive uploaded session logs and expose a REST API.
+- [ ] **5.3 React Dashboard**: Build an interactive web frontend to view a patient's BPS over time, inspect individual trial rasters, and flag anomalous sessions.
