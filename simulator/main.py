@@ -43,7 +43,7 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
             # Maintain a 100 Hz update loop
             await asyncio.sleep(dt)
             
-    except ConnectionResetError:
+    except ConnectionError:
         logging.info(f"Client {addr} disconnected.")
     except asyncio.CancelledError:
         pass
@@ -51,7 +51,10 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
         logging.error(f"Error serving client {addr}: {e}")
     finally:
         writer.close()
-        await writer.wait_closed()
+        try:
+            await writer.wait_closed()
+        except ConnectionError:
+            pass
         logging.info(f"Connection to {addr} closed.")
 
 async def main():

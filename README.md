@@ -12,11 +12,23 @@ Simulated neural signals are decoded into cursor movement, enabling a "mind-cont
 - **Decoder** – Population Vector (v1) / Kalman Filter (v2), optimized with Accelerate  
 - **Metrics & Web Dashboard** (future) – session logging and performance visualization  
 
-## Quick Start (once built)
+## Current Status: Phase 1 Complete
+We have successfully implemented the **Neural Simulator MVP**. The simulator generates synthetic motor cortex spike trains via a mathematical cosine-tuning population model and streams the data over a TCP socket at 100 Hz.
 
-1. Start the simulator: `python simulator.py`
-2. Launch the macOS app
-3. Run calibration, then control the cursor
+**Next Phase (Phase 2):** Building the native macOS app skeleton (SwiftUI) and implementing the TCP client to receive the neural spikes and display a real-time raster plot.
+
+## Quick Start (Simulator)
+
+1. **Start the simulator:**
+   ```bash
+   make run-sim
+   ```
+2. **View the real-time data stream:**
+   Open a new terminal window and connect to the TCP socket using `netcat`:
+   ```bash
+   nc 127.0.0.1 9000
+   ```
+   You will see a continuous 100 Hz stream of JSON packets containing the timestamp, simulated movement kinematics, and the resulting neural spikes.
 
 ## Tech Stack
 
