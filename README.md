@@ -34,6 +34,7 @@ For a deep dive into the project's design, terminology, and future plans, please
 - 🏢 **[Industry Tech Stack Comparison](docs/industry_comparison.md)**: A cross-industry breakdown of how major BCI companies (Neuralink, Blackrock, Synchron) architect their software pipelines.
 - ⚙️ **[Architecture & Data Specs](docs/architecture.md)**: Details the high-level data flow, network topology, and the exact JSON payload schema streaming from the simulator.
 - 🗺️ **[Project Roadmap](docs/roadmap.md)**: A detailed, step-by-step 5-phase master plan outlining upcoming milestones, features, and the current state of the end-to-end system.
+- 📚 **[References & Prior Art](docs/references.md)**: A curated directory of open-source BCI research frameworks, hardware interfaces, and decoding algorithms.
 
 ## Current Status: Phase 1 Complete
 We have successfully implemented the **Neural Simulator MVP**. The simulator delivers a continuous, high-fidelity stream of synthetic neural spikes over a TCP socket at 100 Hz, mimicking the telemetry of a real implanted BCI device.

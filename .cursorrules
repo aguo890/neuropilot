@@ -8,3 +8,4 @@ Whenever a development Phase is completed:
 ## Architecture Guidelines
 - Always prioritize zero-abstraction, readable code.
 - Provide detailed AI CONTEXT & DOCUMENTATION blocks at the top of new Python/Swift files.
+- NEVER reinvent the wheel. Always review `docs/references.md` and consult prior art/open-source implementations before building algorithms or architectures from scratch.
