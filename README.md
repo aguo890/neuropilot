@@ -15,6 +15,8 @@ NeuroPilot is dedicated to delivering elegant, maintainable, performant, and rel
 - **Signal Decoder**: Designs and implements algorithms to decode brain activity (Population Vector / Kalman Filter) optimized natively via Apple's Accelerate framework.
 - **Clinical Dashboard (Future)**: Full-stack metrics and session logging to track clinical tasks, validate software systems, and measure user performance metrics.
 
+> 🧠 **New to BCIs?** Check out the [BCI Glossary & Domain Knowledge](docs/bci_glossary.md) guide to understand the terminology and neuroscience concepts used in this project.
+
 ## Project Roadmap
 Please refer to [docs/roadmap.md](docs/roadmap.md) for a detailed, step-by-step 8-phase plan of the project architecture and upcoming milestones.
 
@@ -34,7 +36,21 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
    ```bash
    nc 127.0.0.1 9000
    ```
-   You will see a continuous 100 Hz stream of JSON packets containing the timestamp, simulated movement kinematics, and the resulting neural spikes.
+   You will see a continuous 100 Hz stream of JSON packets.
+
+### Data Stream Schema
+
+Each newline-delimited JSON packet represents a 10ms simulation bin.
+
+**Example Payload:**
+```json
+{"timestamp": 83262.479885916, "kinematics": [-0.7511403567705126, 0.9917193961455366], "spikes": [2, 5, 19, 20, 31, 46, 49, 57, 66, 66, 69, 80, 90, 91, 94]}
+```
+
+**Field Dictionary:**
+- `timestamp` *(float)*: The exact simulator event loop time (in seconds) when this packet was generated. Used downstream to measure end-to-end system latency.
+- `kinematics` *(array of floats)*: The actual intended 2D movement vector `[vx, vy]` at this point in time (following a Figure-8 trajectory). This represents the "ground truth" movement intention. Downstream clinical dashboards use this alongside the decoded movement to calculate decoding error metrics.
+- `spikes` *(array of ints)*: A flat array containing the IDs of the neurons that fired during this 10ms bin. If a highly active neuron (like ID `66`) fires twice in the bin, its ID appears twice. This accurately mimics raw threshold crossings detected by a physical microelectrode array.
 
 ## Tech Stack
 
