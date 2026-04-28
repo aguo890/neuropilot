@@ -25,3 +25,4 @@ __pycache__/
 venv/
 # Node
 node_modules/
+.env
