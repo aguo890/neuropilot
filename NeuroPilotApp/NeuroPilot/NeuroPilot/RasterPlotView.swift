@@ -43,19 +43,23 @@ struct RasterPlotView: View {
                     context.stroke(linePath, with: .color(.gray.opacity(0.1)), lineWidth: 0.5)
                 }
                 
-                // Draw Spikes
+                // Draw Spikes efficiently
+                var spikeContext = context
+                spikeContext.addFilter(.shadow(color: .green.opacity(0.5), radius: 1, x: 0, y: 0))
+                
+                var spikePath = Path()
+                
                 for (timeIndex, spikes) in history.enumerated() {
                     for neuronId in spikes {
                         let x = CGFloat(timeIndex) * cellWidth
                         let y = size.height - (CGFloat(neuronId) * cellHeight)
                         
                         let rect = CGRect(x: x, y: y, width: max(1.5, cellWidth), height: max(1.5, cellHeight))
-                        
-                        // Add a subtle glow effect to spikes
-                        context.addFilter(.shadow(color: .green.opacity(0.5), radius: 1, x: 0, y: 0))
-                        context.fill(Path(rect), with: .color(.green))
+                        spikePath.addRect(rect)
                     }
                 }
+                
+                spikeContext.fill(spikePath, with: .color(.green))
             }
             .frame(minHeight: 250)
             .background(Color.black.opacity(0.05))
