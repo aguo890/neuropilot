@@ -29,6 +29,7 @@ NeuroPilot is dedicated to delivering elegant, maintainable, performant, and rel
 For a deep dive into the project's design, terminology, and future plans, please refer to our dedicated documentation:
 
 - 🧠 **[BCI Glossary & Domain Knowledge](docs/bci_glossary.md)**: A beginner-friendly guide to the neuroscience, hardware, and algorithmic terminology used in this project (e.g., motor cortex, spikes, Kalman filters).
+- 🏢 **[Industry Tech Stack Comparison](docs/industry_comparison.md)**: A cross-industry breakdown of how major BCI companies (Neuralink, Blackrock, Synchron) architect their software pipelines.
 - ⚙️ **[Architecture & Data Specs](docs/architecture.md)**: Details the high-level data flow, network topology, and the exact JSON payload schema streaming from the simulator.
 - 🗺️ **[Project Roadmap](docs/roadmap.md)**: A detailed, step-by-step 5-phase master plan outlining upcoming milestones, features, and the current state of the end-to-end system.
 
