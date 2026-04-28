@@ -12,7 +12,7 @@
 | 7     | Full-Stack Dashboard         | Web viewer for session data                  |
 | 8     | Simulated User Study         | Quantitative metrics, video demo             |
 
-**Current focus**: Phases 0–2 (Foundational Setup).
+**Current focus**: Phase 2 (Native Mac App Skeleton + TCP Client). Phase 0 and 1 are complete.
 
 ---
 

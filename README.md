@@ -12,6 +12,9 @@ Simulated neural signals are decoded into cursor movement, enabling a "mind-cont
 - **Decoder** – Population Vector (v1) / Kalman Filter (v2), optimized with Accelerate  
 - **Metrics & Web Dashboard** (future) – session logging and performance visualization  
 
+## Project Roadmap
+Please refer to [docs/roadmap.md](docs/roadmap.md) for a detailed, step-by-step 8-phase plan of the project architecture and upcoming milestones.
+
 ## Current Status: Phase 1 Complete
 We have successfully implemented the **Neural Simulator MVP**. The simulator generates synthetic motor cortex spike trains via a mathematical cosine-tuning population model and streams the data over a TCP socket at 100 Hz.
 
