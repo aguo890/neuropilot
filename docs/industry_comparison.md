@@ -30,13 +30,13 @@ When you look beneath the frontend layer, the languages and frameworks used for 
 
 ### 📊 Summary Table: Tech Stack Convergence Across BCI Companies
 
-| Layer | Neuralink (Likely) | Blackrock Neurotech | Synchron | Paradromics | Precision Neuroscience |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Patient App** | Swift (iOS/macOS) | Native (Win/macOS) | macOS, Swift | Not strictly specified, but likely native | iOS/Android (Kotlin/Swift) |
-| **Core Decoder** | C++/Rust | C++ | C/C++, Python | C++/Rust | Not publicly specified |
-| **Web Dashboard** | React, Python/Node | React/Vue/Angular, Python/Node | TypeScript, Python | TypeScript, Python | Not publicly specified |
-| **Wireless Protocol** | Proprietary BLE | Wired/Proprietary | Custom/BLE | Likely proprietary | Ultrawideband (custom) |
-| **Data Infrastructure**| AWS, Postgres | Cloud (AWS), SQL DBs | Cloud, SQL DBs | CI/CD, Prometheus, Grafana | Cloud-based |
+| Layer | **NeuroPilot** | Neuralink (Likely) | Blackrock Neurotech | Synchron | Paradromics | Precision Neuroscience |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Patient App** | Swift (macOS) + Metal | Swift (iOS/macOS) | Native (Win/macOS) | macOS, Swift | Not strictly specified, but likely native | iOS/Android (Kotlin/Swift) |
+| **Core Decoder** | C++ (pybind11) | C++/Rust | C++ | C/C++, Python | C++/Rust | Not publicly specified |
+| **Web Dashboard** | React, Python (FastAPI) | React, Python/Node | React/Vue/Angular, Python/Node | TypeScript, Python | TypeScript, Python | Not publicly specified |
+| **Wireless Protocol** | Modular (TCP/BLE) | Proprietary BLE | Wired/Proprietary | Custom/BLE | Likely proprietary | Ultrawideband (custom) |
+| **Data Infrastructure**| PostgreSQL, TimescaleDB | AWS, Postgres | Cloud (AWS), SQL DBs | Cloud, SQL DBs | CI/CD, Prometheus, Grafana | Cloud-based |
 
 ### 💡 Key Takeaway for the NeuroPilot Blueprint
 
