@@ -29,6 +29,7 @@ Simulated neural signals are decoded into cursor movement, enabling a "mind-cont
 
 ## Repository Structure (planned)
 
+```text
 neuropilot/
 ├── README.md
 ├── docs/
@@ -47,3 +48,4 @@ neuropilot/
 │       ├── Decoder/
 │       └── UI/
 └── dashboard/ (future)
+```
