@@ -15,10 +15,10 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 |--------|-------|-----------|-------------|
 | 🟢 | **Phase 0** | `Project Init` | Foundational repo, dev environment, and SwiftUI skeleton. |
 | 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Rust library imitating compressed 1Mbps telemetry. |
-| 🟡 | **Phase 2** | `NeuroPilot Desktop` | Native Mac/iOS App: Swift package with BluetoothManager and MetalRenderer. |
+| 🟢 | **Phase 2** | `NeuroPilot Desktop` | Native Mac/iOS App: Swift package with BluetoothManager and MetalRenderer. |
 | ⚪ | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
 | ⚪ | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
-| ⚪ | **Phase 5** | `NeuroPilot Cloud` | Clinical Dashboard: FastAPI + React + PostgreSQL + TimescaleDB for telemetry. |
+| 🟡 | **Phase 5** | `NeuroPilot Cloud` | Clinical Dashboard: FastAPI + Premium Dashboard (Cognitive Fatigue implemented). |
 
 ---
 
@@ -39,15 +39,16 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 - [x] **1.1 Neuron Population Model**: Build `MotorCortexSimulator` (N=100) using Cosine-Tuning math to map 2D movement vectors to firing rates.
 - [x] **1.2 Movement Trajectory**: Implement a dynamic Figure-8 kinematic path generator.
 - [x] **1.3 Telemetry Stream**: Use `asyncio` to stream JSON packets containing spikes, kinematics, and timestamps at 100 Hz.
-- [ ] **1.4 (Future) Lossless Compression**: Implement a Rust reference encoder using adaptive delta encoding to compress raw electrode data into a 1 Mbps `.brainwire` stream.
+- [x] **1.4 Lossless Compression**: Implement a Rust reference encoder using adaptive delta encoding to compress raw electrode data into a 1 Mbps `.brainwire` stream.
 
-### 🟡 Phase 2: `NeuroPilot Desktop` (Low-Latency Mac/iOS App)
+### 🟢 Phase 2: `NeuroPilot Desktop` (Low-Latency Mac/iOS App)
 **Goal**: A native Swift package that ingests the telemetry stream and renders a zero-latency cursor based on decoder output.
 
-- [ ] **2.1 Telemetry Client**: Implement `BluetoothManager` (or TCP client `NWConnection`) to connect to the telemetry stream.
-- [ ] **2.2 Data Pipeline**: Define `SpikePacket` and build a `Pipeline` class to hand data off to the bridging header.
-- [ ] **2.3 MetalRenderer**: Build a custom Apple Metal pipeline to draw the cursor bypassing standard UI framework overhead.
-- [ ] **2.4 Basic Layout**: Scaffold `ContentView.swift` with a clean, clinical interface.
+- [x] **2.1 Telemetry Client**: Implement `BluetoothManager` and `TCPTelemetryClient` to connect to the telemetry stream.
+- [x] **2.2 Data Pipeline**: Define `SpikePacket` and telemetry protocols.
+- [x] **2.3 MetalRenderer**: Build a custom Apple Metal pipeline to draw the cursor bypassing standard UI framework overhead.
+- [x] **2.4 Basic Layout**: Scaffold `ContentView.swift` and `DashboardViewModel`.
+- [x] **2.5 Real-time Visualization**: Implement `RasterPlotView` for spike train visualization.
 
 ### ⚪ Phase 3: `NeuroPilot Core` (C++ Decoder Engine)
 **Goal**: The core mathematical engine responsible for the real-time decoding loop, written in C++ for performance.
@@ -66,6 +67,7 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 ### ⚪ Phase 5: `NeuroPilot Cloud` (Clinical Data Dashboard)
 **Goal**: A modern full-stack web dashboard for remote session logging and clinical review.
 
-- [ ] **5.1 Database Schema**: Set up PostgreSQL with the TimescaleDB extension for time-series performance metrics.
-- [ ] **5.2 Cloud ETL Pipeline**: Build a FastAPI Python backend to receive uploaded session logs and expose a REST API.
-- [ ] **5.3 React Dashboard**: Build an interactive web frontend to view a patient's BPS over time, inspect individual trial rasters, and flag anomalous sessions.
+- [/] **5.1 Database Schema**: Set up PostgreSQL with the TimescaleDB extension for time-series performance metrics.
+- [x] **5.2 Cloud ETL Pipeline**: Build a FastAPI Python backend to receive and process session metrics.
+- [x] **5.3 Cognitive Fatigue Dashboard**: Implement tracking for Time-to-target, Overshoot, and Bit-Rate Decay.
+- [ ] **5.4 React Dashboard**: Build full interactive web frontend.

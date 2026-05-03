@@ -23,7 +23,7 @@ enum ConnectionStatus: Equatable {
 protocol TelemetryProvider: AnyObject {
     var status: ConnectionStatus { get }
     var packetsPerSecond: Int { get }
-    var onPacketReceived: ((SpikePacket) -> Void)? { get set }
+    var onPacketsReceived: (([SpikePacket]) -> Void)? { get set }
     
     func connect()
     func disconnect()

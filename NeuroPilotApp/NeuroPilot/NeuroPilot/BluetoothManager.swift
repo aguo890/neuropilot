@@ -20,7 +20,7 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     private let serviceUUID = CBUUID(string: "BD420000-0000-4000-8000-000000000000")
     private let characteristicUUID = CBUUID(string: "BD420001-0000-4000-8000-000000000000")
     
-    var onPacketReceived: ((SpikePacket) -> Void)?
+    var onPacketsReceived: (([SpikePacket]) -> Void)?
     
     override init() {
         super.init()
@@ -142,6 +142,9 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     }
     
     private var buffer = Data()
+    private var pendingPackets: [SpikePacket] = []
+    private var lastBatchDispatchTime: Date = .distantPast
+    private let batchInterval: TimeInterval = 0.016 // 60Hz update rate
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         guard let data = characteristic.value else { return }
@@ -159,10 +162,20 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
             buffer.removeSubrange(0...newlineIndex)
             
             if let packet = try? JSONDecoder().decode(SpikePacket.self, from: packetData) {
-                DispatchQueue.main.async {
-                    self.packetCount += 1
-                    self.onPacketReceived?(packet)
-                }
+                pendingPackets.append(packet)
+            }
+        }
+        
+        // Batch dispatch to main thread to avoid overwhelming UI (throttle to ~60Hz)
+        let now = Date()
+        if !pendingPackets.isEmpty && now.timeIntervalSince(lastBatchDispatchTime) >= batchInterval {
+            let packets = pendingPackets
+            pendingPackets.removeAll()
+            lastBatchDispatchTime = now
+            
+            DispatchQueue.main.async {
+                self.packetCount += packets.count
+                self.onPacketsReceived?(packets)
             }
         }
     }

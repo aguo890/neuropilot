@@ -74,7 +74,12 @@ struct ContentView: View {
                             
                             HStack(spacing: 20) {
                                 // Kinematics Section
-                                KinematicsCard(kinematics: viewModel.currentKinematics)
+                                KinematicsCard(
+                                    kinematics: viewModel.currentKinematics,
+                                    confidence: $viewModel.confidence,
+                                    cursorPoint: $viewModel.cursorPoint,
+                                    isArtifactDetected: viewModel.isArtifactDetected
+                                )
                                 
                                 // Real-time Vector Section
                                 VectorCard(kinematics: viewModel.currentKinematics)
@@ -173,11 +178,23 @@ struct MetricRow: View {
 
 struct KinematicsCard: View {
     let kinematics: [Double]
+    @Binding var confidence: Double
+    @Binding var cursorPoint: CGPoint
+    let isArtifactDetected: Bool
     
     var body: some View {
         VStack(alignment: .leading) {
-            Label("Ground Truth Trajectory", systemImage: "move.3d")
-                .font(.headline)
+            HStack {
+                Label("Neural Cursor", systemImage: "move.3d")
+                    .font(.headline)
+                Spacer()
+                if isArtifactDetected {
+                    Label("Shield Active", systemImage: "shield.fill")
+                        .font(.caption.bold())
+                        .foregroundColor(.red)
+                        .symbolEffect(.pulse)
+                }
+            }
             
             GeometryReader { geo in
                 ZStack {
@@ -195,30 +212,49 @@ struct KinematicsCard: View {
                     }
                     .stroke(Color.gray.opacity(0.1), lineWidth: 1)
                     
-                    // Crosshair
-                    Circle()
-                        .stroke(Color.blue.opacity(0.3), lineWidth: 1)
-                        .frame(width: 40, height: 40)
-                    
-                    // The Cursor
-                    Circle()
-                        .fill(RadialGradient(colors: [.blue, .cyan], center: .center, startRadius: 0, endRadius: 15))
-                        .frame(width: 20, height: 20)
-                        .shadow(color: .blue.opacity(0.5), radius: 5)
-                        .offset(
-                            x: CGFloat(kinematics.count > 0 ? kinematics[0] : 0) * (geo.size.width / 2.5),
-                            y: CGFloat(kinematics.count > 1 ? kinematics[1] : 0) * (geo.size.height / 2.5)
-                        )
-                        .animation(.spring(response: 0.2), value: kinematics)
+                    // Metal Cursor Layer
+                    MetalView(cursorPosition: $cursorPoint, confidence: $confidence)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .allowsHitTesting(false) // Pass clicks through
                 }
             }
             .frame(height: 200)
             .background(Color.black.opacity(0.02))
             .cornerRadius(12)
+            
+            // Confidence Bar
+            HStack {
+                Text("Decoder Confidence")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                ProgressView(value: confidence)
+                    .tint(cursorColor)
+                    .controlSize(.small)
+            }
+            .padding(.top, 8)
         }
         .padding()
         .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
         .cornerRadius(16)
+    }
+    
+    private var cursorColor: Color {
+        if isArtifactDetected { return .red }
+        return Color.interpolate(from: .red, to: .green, fraction: confidence)
+    }
+    
+    private var cursorSize: CGFloat {
+        if isArtifactDetected { return 25 }
+        return 15 + CGFloat(confidence * 10)
+    }
+}
+
+extension Color {
+    static func interpolate(from: Color, to: Color, fraction: Double) -> Color {
+        let f = CGFloat(max(0, min(1, fraction)))
+        if f > 0.8 { return .green }
+        if f > 0.4 { return .yellow }
+        return .red
     }
 }
 

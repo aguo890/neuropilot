@@ -10,7 +10,7 @@ else
     PYTHON_CMD := .venv/bin/python
 endif
 
-.PHONY: setup push build run run-sim help clean
+.PHONY: setup push build run run-sim build-rust test-rust help clean
 
 # 🆘 Help
 help: ## ℹ️ Show this help message
@@ -33,22 +33,33 @@ push: ## 🛡️ Auto-commit + Push
 # Build the macOS App
 build: ## 🔨 Build NeuroPilotApp
 	@echo "🔨 Building NeuroPilotApp..."
-	@cd NeuroPilotApp/NeuroPilot && xcodebuild -project NeuroPilot.xcodeproj -scheme NeuroPilot -configuration Debug -derivedDataPath build build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+	@cd NeuroPilotApp/NeuroPilot && xcodebuild -project NeuroPilot.xcodeproj -scheme NeuroPilot -configuration Debug -derivedDataPath /tmp/NeuroPilotBuild build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
 # Run the macOS App
 run: build ## 🚀 Run NeuroPilotApp
 	@echo "🛑 Stopping any running instances..."
 	@pkill NeuroPilot || true
 	@echo "🚀 Launching NeuroPilotApp..."
-	@open NeuroPilotApp/NeuroPilot/build/Build/Products/Debug/NeuroPilot.app
+	@open /tmp/NeuroPilotBuild/Build/Products/Debug/NeuroPilot.app
 
 # Run the Neural Simulator
 run-sim: ## 🧠 Run Neural Simulator
 	@echo "🧠 Starting Neural Simulator..."
 	@$(PYTHON_CMD) simulator/main.py
 
+# 🔨 Build Rust Encoder
+build-rust: ## 🦀 Build N1Fusion Rust Library
+	@echo "🦀 Building N1Fusion..."
+	@cd n1_fusion && cargo build --release
+
+# 🧪 Test Rust Encoder
+test-rust: ## 🦀 Run Rust Tests
+	@echo "🧪 Testing N1Fusion..."
+	@cd n1_fusion && cargo test
+
 # Clean Build Artifacts
 clean: ## 🧹 Clean build artifacts
 	@echo "🧹 Cleaning..."
-	@rm -rf NeuroPilotApp/NeuroPilot/build
+	@rm -rf NeuroPilotApp/NeuroPilot/build /tmp/NeuroPilotBuild
+	@cd n1_fusion && cargo clean
 	@echo "✅ Cleaned."

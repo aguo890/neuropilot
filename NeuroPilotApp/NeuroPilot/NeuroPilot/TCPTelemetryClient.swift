@@ -21,7 +21,7 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
     private var isManualDisconnect = false
     
     // Callback for received packets
-    var onPacketReceived: ((SpikePacket) -> Void)?
+    var onPacketsReceived: (([SpikePacket]) -> Void)?
     
     init(host: String = "127.0.0.1", port: Int = 9000) {
         self.host = host
@@ -114,6 +114,9 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
     }
     
     private var buffer = Data()
+    private var pendingPackets: [SpikePacket] = []
+    private var lastBatchDispatchTime: Date = .distantPast
+    private let batchInterval: TimeInterval = 0.016 // 60Hz update rate
     
     private func processIncomingData(_ data: Data) {
         buffer.append(data)
@@ -124,10 +127,20 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
             buffer.removeSubrange(0...newlineIndex)
             
             if let packet = try? JSONDecoder().decode(SpikePacket.self, from: packetData) {
-                DispatchQueue.main.async {
-                    self.packetCount += 1
-                    self.onPacketReceived?(packet)
-                }
+                pendingPackets.append(packet)
+            }
+        }
+        
+        // Batch dispatch to main thread to avoid overwhelming UI (throttle to ~60Hz)
+        let now = Date()
+        if !pendingPackets.isEmpty && now.timeIntervalSince(lastBatchDispatchTime) >= batchInterval {
+            let packets = pendingPackets
+            pendingPackets.removeAll()
+            lastBatchDispatchTime = now
+            
+            DispatchQueue.main.async {
+                self.packetCount += packets.count
+                self.onPacketsReceived?(packets)
             }
         }
     }

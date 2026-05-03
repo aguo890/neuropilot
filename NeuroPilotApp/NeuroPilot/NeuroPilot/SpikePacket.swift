@@ -21,6 +21,14 @@ struct SpikePacket: Codable, Identifiable {
     /// This accurately mimics raw threshold crossings detected by a physical microelectrode array.
     let spikes: [Int]
     
+    /// The decoder's estimated confidence in the current kinematic prediction.
+    /// Range: 0.0 (Noisy/Uncertain) to 1.0 (Crystal Clear).
+    let confidence: Double
+    
+    /// Flag indicating if an electrical artifact (e.g., muscle noise) was detected.
+    /// If true, the downstream decoder should likely "mute" or ignore this packet.
+    let isArtifact: Bool
+    
     // MARK: - Computed Helpers
     
     /// Helper to access horizontal velocity (vx).
@@ -47,5 +55,7 @@ struct SpikePacket: Codable, Identifiable {
         case timestamp
         case kinematics
         case spikes
+        case confidence
+        case isArtifact = "is_artifact"
     }
 }
