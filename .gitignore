@@ -26,3 +26,20 @@ venv/
 # Node
 node_modules/
 .env
+
+# Rust
+target/
+**/target/
+
+# Binary & Build Artifacts
+*.o
+*.bin
+*.brainwire
+*.lock
+!Cargo.lock
+!Package.resolved
+
+# Simulation Data
+cloud/data/
+logs/
+*.log

@@ -1,0 +1,18 @@
+[package]
+name = "n1_fusion"
+version = "0.1.0"
+edition = "2021"
+description = "Reference encoder for .brainwire compressed neural telemetry"
+
+[dependencies]
+# We'll use bit-vec or bit-struct if needed, but for a reference encoder 
+# we can stick to standard library for now or simple bit manipulation.
+# bitvec = "1.0" 
+
+[lib]
+name = "n1_fusion"
+path = "src/lib.rs"
+
+[[bin]]
+name = "brainwire-enc"
+path = "src/main.rs"

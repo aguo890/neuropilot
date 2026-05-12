@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroPilot Cloud | Cognitive Fatigue Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dark-mode">
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>NeuroPilot<span>Cloud</span></h1>
+            </div>
+            <nav>
+                <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="#"><i data-lucide="activity"></i> Sessions</a>
+                <a href="#"><i data-lucide="users"></i> Patients</a>
+                <a href="#"><i data-lucide="settings"></i> Settings</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">LH</div>
+                    <div class="user-info">
+                        <span class="name">Lily Hwang</span>
+                        <span class="role">Lead Consultant</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="top-bar">
+                <div class="breadcrumb">
+                    <span>Clinical Tools</span>
+                    <i data-lucide="chevron-right"></i>
+                    <span class="current">Cognitive Fatigue Analysis</span>
+                </div>
+                <div class="actions">
+                    <button class="btn-secondary"><i data-lucide="download"></i> Export Report</button>
+                    <button class="btn-primary">New Session</button>
+                </div>
+            </header>
+
+            <section class="dashboard-header">
+                <div class="header-text">
+                    <h2>Cognitive Fatigue Dashboard</h2>
+                    <p>Analyzing psychomotor performance decay over 20-minute calibration sessions.</p>
+                </div>
+                <div class="session-info">
+                    <span class="badge">Session ID: NP-2026-04-28-FATIGUE</span>
+                    <span class="badge">Status: Analysis Complete</span>
+                </div>
+            </section>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon ttt-icon"><i data-lucide="timer"></i></div>
+                    <div class="metric-content">
+                        <span class="label">Avg Time-to-Target</span>
+                        <div class="value-row">
+                            <span class="value" id="avg-ttt">--</span>
+                            <span class="unit">ms</span>
+                        </div>
+                        <div class="trend up"><i data-lucide="trending-up"></i> +12% from baseline</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon overshoot-icon"><i data-lucide="target"></i></div>
+                    <div class="metric-content">
+                        <span class="label">Mean Overshoot</span>
+                        <div class="value-row">
+                            <span class="value" id="avg-overshoot">--</span>
+                            <span class="unit">px</span>
+                        </div>
+                        <div class="trend up"><i data-lucide="trending-up"></i> +24% from baseline</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon bps-icon"><i data-lucide="zap"></i></div>
+                    <div class="metric-content">
+                        <span class="label">Bit-Rate Efficiency</span>
+                        <div class="value-row">
+                            <span class="value" id="avg-bps">--</span>
+                            <span class="unit">BPS</span>
+                        </div>
+                        <div class="trend down"><i data-lucide="trending-down"></i> -35% decay observed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-card large">
+                    <div class="chart-header">
+                        <h3>Bit-Rate Decay (20m Session)</h3>
+                        <p>Real-time throughput analysis identifying the fatigue inflection point.</p>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="bps-chart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-group">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Performance Scatter</h3>
+                            <p>TTT vs Overshoot correlation.</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="scatter-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Fatigue Prediction</h3>
+                            <div class="prediction-score">
+                                <span class="score">High Risk</span>
+                                <span class="subtext">Session limit recommended at 12m</span>
+                            </div>
+                        </div>
+                        <div class="fatigue-gauge">
+                            <div class="gauge-bar">
+                                <div class="gauge-fill" style="width: 78%;"></div>
+                            </div>
+                            <div class="gauge-labels">
+                                <span>Optimal</span>
+                                <span>Fatigued</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -47,7 +47,6 @@ We have successfully implemented the **Neural Simulator MVP**. The simulator del
    ```bash
    make run-sim
    ```
-2. **View the real-time data stream:**
    Open a new terminal window and connect to the TCP socket using `netcat`:
    ```bash
    nc 127.0.0.1 9000

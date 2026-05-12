@@ -1,7 +1,6 @@
-numpy
-openai
-python-dotenv
 fastapi
 uvicorn
 pydantic
+numpy
 pandas
+python-multipart

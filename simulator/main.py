@@ -39,10 +39,19 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
             for i, count in enumerate(spikes):
                 spike_ids.extend([i] * count)
                 
+            # Confidence: Simulated decoder confidence (tends to dip during high-velocity changes)
+            mag = np.linalg.norm(simulated_movement)
+            confidence = max(0.4, 1.0 - (mag * 0.2) + np.random.uniform(-0.05, 0.05))
+            
+            # Artifact injection: 1% chance of a high-voltage muscle artifact
+            is_artifact = np.random.random() < 0.01
+            
             data = {
                 "timestamp": t,
                 "kinematics": simulated_movement.tolist(),
-                "spikes": spike_ids
+                "spikes": spike_ids,
+                "confidence": float(confidence),
+                "is_artifact": is_artifact
             }
             
             # Serialize to JSON and send with newline delimiter
