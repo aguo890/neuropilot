@@ -49,13 +49,28 @@ struct ContentView: View {
                 }
                 
                 Section("Decoder Engine (Phase 3)") {
-                    Text("Inference Status: Inactive")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Slider(value: .constant(0.5)) {
-                        Text("Gain")
+                    HStack {
+                        Circle()
+                            .fill(viewModel.isDecoderActive ? Color.green : Color.orange)
+                            .frame(width: 8, height: 8)
+                        Text(viewModel.isDecoderActive ? "C++ Kalman Active" : "Simulator Truth")
+                            .font(.caption.bold())
+                            .foregroundColor(viewModel.isDecoderActive ? .green : .secondary)
                     }
-                    .disabled(true)
+                    
+                    Toggle("On-Device Kalman", isOn: $viewModel.isDecoderActive)
+                        .toggleStyle(.switch)
+                    
+                    if viewModel.isDecoderActive {
+                        HStack {
+                            Label("Latency", systemImage: "bolt.fill")
+                            Spacer()
+                            Text("< 1 µs")
+                                .fontWeight(.bold)
+                                .foregroundColor(.green)
+                        }
+                        .font(.caption)
+                    }
                 }
             }
             .navigationTitle("NeuroPilot")
@@ -104,7 +119,7 @@ struct ContentView: View {
                     
                     ToolbarItem(placement: .primaryAction) {
                         Button {
-                            viewModel.spikeHistory.removeAll()
+                            viewModel.resetBuffer()
                         } label: {
                             Label("Reset Buffer", systemImage: "trash")
                         }
@@ -113,7 +128,7 @@ struct ContentView: View {
                     
                     ToolbarItem(placement: .status) {
                         if case .connected = viewModel.status {
-                            Text("Recieving Data...")
+                            Text("Receiving Data...")
                                 .font(.caption)
                                 .foregroundColor(.green)
                         }

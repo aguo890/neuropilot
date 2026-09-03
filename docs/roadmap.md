@@ -16,8 +16,8 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 | 🟢 | **Phase 0** | `Project Init` | Foundational repo, dev environment, and SwiftUI skeleton. |
 | 🟢 | **Phase 1** | `N1Fusion Link` | Simulated Hardware Bridge: Rust library imitating compressed 1Mbps telemetry. |
 | 🟢 | **Phase 2** | `NeuroPilot Desktop` | Native Mac/iOS App: Swift package with BluetoothManager and MetalRenderer. |
-| ⚪ | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
-| ⚪ | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
+| 🟢 | **Phase 3** | `NeuroPilot Core` | Core Decoder: C++ library for real-time decoding, bridged to Python and Swift. |
+| 🟡 | **Phase 4** | `NeuroPilot Assess` | Clinical Calibration: Swift Webgrid game + Python offline analysis tools. |
 | 🟡 | **Phase 5** | `NeuroPilot Cloud` | Clinical Dashboard: FastAPI + Premium Dashboard (Cognitive Fatigue implemented). |
 
 ---
@@ -50,12 +50,12 @@ Welcome to the NeuroPilot Roadmap! This document outlines our high-level vision,
 - [x] **2.4 Basic Layout**: Scaffold `ContentView.swift` and `DashboardViewModel`.
 - [x] **2.5 Real-time Visualization**: Implement `RasterPlotView` for spike train visualization.
 
-### ⚪ Phase 3: `NeuroPilot Core` (C++ Decoder Engine)
+### 🟢 Phase 3: `NeuroPilot Core` (C++ Decoder Engine)
 **Goal**: The core mathematical engine responsible for the real-time decoding loop, written in C++ for performance.
 
-- [ ] **3.1 C++ Kalman Filter**: Implement a 2D velocity prediction Kalman Filter in native C++.
-- [ ] **3.2 Python Bindings**: Expose the C++ module via `pybind11` to allow rapid algorithm iteration using PyTorch/NumPy.
-- [ ] **3.3 Swift Bridging**: Create an Objective-C++ bridging header to expose the decoder to `NeuroPilot Desktop` for on-device inference.
+- [x] **3.1 C++ Kalman Filter**: Implement a 2D velocity prediction Kalman Filter in native C++.
+- [x] **3.2 Python Bindings**: Expose the C++ module via `pybind11` to allow rapid algorithm iteration using PyTorch/NumPy.
+- [x] **3.3 Swift Bridging**: Create an Objective-C++ bridging header to expose the decoder to `NeuroPilot Desktop` for on-device inference.
 
 ### ⚪ Phase 4: `NeuroPilot Assess` (Clinical Calibration Task)
 **Goal**: Standardized psychomotor tasks to gather training data and assess decoder performance (Bits Per Second).

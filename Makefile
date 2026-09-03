@@ -10,7 +10,7 @@ else
     PYTHON_CMD := .venv/bin/python
 endif
 
-.PHONY: setup push build run run-sim build-rust test-rust help clean
+.PHONY: setup push build run run-sim build-rust test-rust build-core test-core build-python test-python help clean
 
 # 🆘 Help
 help: ## ℹ️ Show this help message
@@ -34,6 +34,8 @@ push: ## 🛡️ Auto-commit + Push
 build: ## 🔨 Build NeuroPilotApp
 	@echo "🔨 Building NeuroPilotApp..."
 	@cd NeuroPilotApp/NeuroPilot && xcodebuild -project NeuroPilot.xcodeproj -scheme NeuroPilot -configuration Debug -derivedDataPath /tmp/NeuroPilotBuild build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+	@echo "🔐 Applying ad-hoc signature..."
+	@codesign -s - --force --deep /tmp/NeuroPilotBuild/Build/Products/Debug/NeuroPilot.app
 
 # Run the macOS App
 run: build ## 🚀 Run NeuroPilotApp
@@ -57,9 +59,34 @@ test-rust: ## 🦀 Run Rust Tests
 	@echo "🧪 Testing N1Fusion..."
 	@cd n1_fusion && cargo test
 
+# ⚡ Build C++ Core Decoder
+build-core: ## ⚡ Build NeuroPilot Core (C++)
+	@echo "⚡ Building NeuroPilot Core..."
+	@mkdir -p neuropilot_core/build
+	@clang++ -std=c++17 -O3 -Wall -Wextra -I neuropilot_core/include -c neuropilot_core/src/matrix.cpp -o neuropilot_core/build/matrix.o
+	@clang++ -std=c++17 -O3 -Wall -Wextra -I neuropilot_core/include -c neuropilot_core/src/kalman_filter.cpp -o neuropilot_core/build/kalman_filter.o
+	@ar rcs neuropilot_core/build/libneuropilot_core.a neuropilot_core/build/matrix.o neuropilot_core/build/kalman_filter.o
+	@echo "✅ Core library built: neuropilot_core/build/libneuropilot_core.a"
+
+# 🧪 Test C++ Core Decoder
+test-core: build-core ## 🧪 Test NeuroPilot Core (C++)
+	@echo "🧪 Running Kalman Filter Tests..."
+	@clang++ -std=c++17 -O3 -Wall -Wextra -I neuropilot_core/include neuropilot_core/tests/test_kalman.cpp neuropilot_core/build/libneuropilot_core.a -o neuropilot_core/build/test_kalman
+	@./neuropilot_core/build/test_kalman
+
+# 🐍 Build Python pybind11 Bindings
+build-python: ## 🐍 Build pybind11 Python extension
+	@echo "🐍 Building neuropilot_core Python module..."
+	@$(PYTHON_CMD) -m pip install -e ./neuropilot_core
+
+# 🧪 Test Python pybind11 Bindings
+test-python: build-python ## 🧪 Test pybind11 Python extension
+	@echo "🧪 Running Python pybind11 Tests..."
+	@$(PYTHON_CMD) neuropilot_core/tests/test_python_bindings.py
+
 # Clean Build Artifacts
 clean: ## 🧹 Clean build artifacts
 	@echo "🧹 Cleaning..."
-	@rm -rf NeuroPilotApp/NeuroPilot/build /tmp/NeuroPilotBuild
+	@rm -rf NeuroPilotApp/NeuroPilot/build /tmp/NeuroPilotBuild neuropilot_core/build
 	@cd n1_fusion && cargo clean
 	@echo "✅ Cleaned."

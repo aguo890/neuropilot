@@ -4,6 +4,8 @@ A high-performance, open-source framework for building bi-directional brain-comp
 
 *Developed by [Aaron Guo](https://www.linkedin.com/in/guo-aaron/) and [Lily Hwang](https://www.linkedin.com/in/lilyhjs/)*
 
+[![Status: Phase 3 Complete](https://img.shields.io/badge/Status-Phase%203%20Complete-brightgreen)](docs/roadmap.md)
+
 ## The Problem: Digital Isolation & The BCI Bottleneck
 When individuals suffer from severe paralysis (due to ALS, spinal cord injuries, or stroke), their physical bodies can no longer move, but their brains—specifically the motor cortex—are still perfectly capable of intending to move. They become physically and digitally isolated.
 
@@ -36,10 +38,10 @@ For a deep dive into the project's design, terminology, and future plans, please
 - 🗺️ **[Project Roadmap](docs/roadmap.md)**: A detailed, step-by-step 5-phase master plan outlining upcoming milestones, features, and the current state of the end-to-end system.
 - 📚 **[References & Prior Art](docs/references.md)**: A curated directory of open-source BCI research frameworks, hardware interfaces, and decoding algorithms.
 
-## Current Status: Phase 1 Complete
-We have successfully implemented the **Neural Simulator MVP**. The simulator delivers a continuous, high-fidelity stream of synthetic neural spikes over a TCP socket at 100 Hz, mimicking the telemetry of a real implanted BCI device.
+## Current Status: Phase 3 Complete
+We have successfully implemented **Phase 3 (`NeuroPilot Core`)**. This includes a zero-dependency C++17 Kalman Filter decoder for 2D velocity prediction with sub-microsecond steady-state inference, high-throughput Python bindings via `pybind11` (>1.1M bins/sec) supporting NumPy and PyTorch, and an Objective-C++ bridging layer integrating real-time on-device neural decoding directly into `NeuroPilot Desktop` to drive the 120 FPS Apple Metal cursor.
 
-**Next Phase (Phase 2):** Building the native macOS app skeleton (SwiftUI) and implementing the asynchronous TCP client to receive the neural spikes and display a real-time raster plot.
+**Next Phase (Phase 4):** Implementing `NeuroPilot Assess`—standardized psychomotor calibration tasks (Swift Webgrid game) and offline Python analysis tools to measure decoder throughput and information transfer rate in Bits Per Second (BPS).
 
 ## Quick Start (Simulator)
 

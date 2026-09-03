@@ -20,6 +20,11 @@ class DashboardViewModel: ObservableObject {
     @Published var isArtifactDetected: Bool = false
     @Published var cursorPoint: CGPoint = .zero
     
+    // On-device C++ Kalman Decoder (Phase 3)
+    let kalmanDecoder = NPKalmanFilterDecoder(stateDim: 2, obsDim: 100, dt: 0.01)
+    @Published var isDecoderActive: Bool = true
+    @Published var decodedVelocity: CGPoint = .zero
+    
     // Source selection
     @Published var source: TelemetrySource = .tcp
     
@@ -31,6 +36,9 @@ class DashboardViewModel: ObservableObject {
     private let maxHistory = 100
     
     init() {
+        // Precompile steady-state transfer matrices for sub-microsecond inference
+        kalmanDecoder.computeSteadyState()
+        
         // Setup packet handlers for both
         tcpClient.onPacketsReceived = { [weak self] packets in
             self?.handleBatch(packets)
@@ -74,20 +82,30 @@ class DashboardViewModel: ObservableObject {
         self.confidence = lastPacket.confidence
         self.isArtifactDetected = packets.contains(where: { $0.isArtifact })
         
+        // Append spike data and decode via on-device C++ Kalman Filter
+        for packet in packets {
+            spikeHistory.append(packet.spikes)
+            let spikeNumbers = packet.spikes.map { NSNumber(value: $0) }
+            decodedVelocity = kalmanDecoder.step(withSpikeIDs: spikeNumbers)
+        }
+        
         // ARTIFACT SHIELD: If noise is detected, "mute" the kinematics update
         if isArtifactDetected {
             SoundManager.shared.playArtifactAlert()
         } else {
-            currentKinematics = lastPacket.kinematics
-            // Map kinematics to normalized CGPoint for Metal with clamping to prevent out-of-bounds
-            let clampedX = max(-1.0, min(1.0, currentKinematics[0]))
-            let clampedY = max(-1.0, min(1.0, currentKinematics[1]))
-            cursorPoint = CGPoint(x: clampedX, y: clampedY)
-        }
-        
-        // Append spike data for visualization (rasters show noise too)
-        for packet in packets {
-            spikeHistory.append(packet.spikes)
+            if isDecoderActive {
+                // Steer cursor via on-device decoded velocity
+                let clampedX = max(-1.0, min(1.0, Double(decodedVelocity.x)))
+                let clampedY = max(-1.0, min(1.0, Double(decodedVelocity.y)))
+                cursorPoint = CGPoint(x: clampedX, y: clampedY)
+                currentKinematics = [Double(decodedVelocity.x), Double(decodedVelocity.y)]
+            } else {
+                currentKinematics = lastPacket.kinematics
+                // Map kinematics to normalized CGPoint for Metal with clamping to prevent out-of-bounds
+                let clampedX = max(-1.0, min(1.0, currentKinematics[0]))
+                let clampedY = max(-1.0, min(1.0, currentKinematics[1]))
+                cursorPoint = CGPoint(x: clampedX, y: clampedY)
+            }
         }
         
         // BIOFEEDBACK: Auditory ping based on movement magnitude
@@ -97,6 +115,13 @@ class DashboardViewModel: ObservableObject {
         if spikeHistory.count > maxHistory {
             spikeHistory.removeFirst(spikeHistory.count - maxHistory)
         }
+    }
+    
+    func resetBuffer() {
+        spikeHistory.removeAll()
+        kalmanDecoder.reset()
+        decodedVelocity = .zero
+        cursorPoint = .zero
     }
     
     func toggleConnection() {

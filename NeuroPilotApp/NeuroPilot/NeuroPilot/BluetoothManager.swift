@@ -9,7 +9,9 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     @Published var packetsPerSecond: Int = 0
     
     private var packetCount = 0
-    private var timer: Timer?
+    private var metricsTimer: Timer?
+    private var flushTimer: DispatchSourceTimer?
+    private let bluetoothQueue = DispatchQueue(label: "com.neuropilot.bluetooth.flush")
     
     private var centralManager: CBCentralManager!
     private var targetPeripheral: CBPeripheral?
@@ -45,6 +47,7 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
         
         // Scan for the NeuroPilot service
         centralManager.scanForPeripherals(withServices: [serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        startFlushTimer()
         startMetricsTimer()
     }
     
@@ -54,6 +57,7 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
             centralManager.cancelPeripheralConnection(peripheral)
         }
         centralManager.stopScan()
+        stopFlushTimer()
         stopMetricsTimer()
         DispatchQueue.main.async {
             self.status = .disconnected
@@ -61,7 +65,7 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     }
     
     private func startMetricsTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        metricsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             DispatchQueue.main.async {
                 self?.packetsPerSecond = self?.packetCount ?? 0
                 self?.packetCount = 0
@@ -70,12 +74,35 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     }
     
     private func stopMetricsTimer() {
-        timer?.invalidate()
-        timer = nil
+        metricsTimer?.invalidate()
+        metricsTimer = nil
         DispatchQueue.main.async {
             self.packetsPerSecond = 0
         }
         packetCount = 0
+    }
+    
+    /// Starts a 60 Hz DispatchSourceTimer that flushes accumulated BLE packets to the main
+    /// thread on a steady clock tick, decoupling UI updates from BLE fragment arrival timing.
+    private func startFlushTimer() {
+        let source = DispatchSource.makeTimerSource(queue: bluetoothQueue)
+        source.schedule(deadline: .now(), repeating: .milliseconds(16), leeway: .milliseconds(1))
+        source.setEventHandler { [weak self] in
+            guard let self, !self.pendingPackets.isEmpty else { return }
+            let packets = self.pendingPackets
+            self.pendingPackets.removeAll(keepingCapacity: true)
+            DispatchQueue.main.async {
+                self.packetCount += packets.count
+                self.onPacketsReceived?(packets)
+            }
+        }
+        source.resume()
+        flushTimer = source
+    }
+    
+    private func stopFlushTimer() {
+        flushTimer?.cancel()
+        flushTimer = nil
     }
     
     // MARK: - CBCentralManagerDelegate
@@ -143,8 +170,6 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     
     private var buffer = Data()
     private var pendingPackets: [SpikePacket] = []
-    private var lastBatchDispatchTime: Date = .distantPast
-    private let batchInterval: TimeInterval = 0.016 // 60Hz update rate
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         guard let data = characteristic.value else { return }
@@ -155,6 +180,8 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
     }
     
     private func processIncomingData(_ data: Data) {
+        // All packet parsing happens here on the BLE delegate queue.
+        // The flush timer drains pendingPackets at a steady 60 Hz cadence.
         buffer.append(data)
         
         while let newlineIndex = buffer.firstIndex(of: 10) { // 10 is '\n'
@@ -163,19 +190,6 @@ class BluetoothManager: NSObject, ObservableObject, TelemetryProvider, CBCentral
             
             if let packet = try? JSONDecoder().decode(SpikePacket.self, from: packetData) {
                 pendingPackets.append(packet)
-            }
-        }
-        
-        // Batch dispatch to main thread to avoid overwhelming UI (throttle to ~60Hz)
-        let now = Date()
-        if !pendingPackets.isEmpty && now.timeIntervalSince(lastBatchDispatchTime) >= batchInterval {
-            let packets = pendingPackets
-            pendingPackets.removeAll()
-            lastBatchDispatchTime = now
-            
-            DispatchQueue.main.async {
-                self.packetCount += packets.count
-                self.onPacketsReceived?(packets)
             }
         }
     }

@@ -5,3 +5,7 @@ fastapi
 uvicorn
 pydantic
 pandas
+pynwb
+dandi
+h5py
+pybind11

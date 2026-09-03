@@ -21,6 +21,8 @@ DerivedData/
 __pycache__/
 *.py[cod]
 *$py.class
+*.egg-info/
+*.so
 .venv/
 venv/
 # Node

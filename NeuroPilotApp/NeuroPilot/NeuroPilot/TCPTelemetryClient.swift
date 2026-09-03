@@ -10,7 +10,7 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
     private let queue = DispatchQueue(label: "com.neuropilot.telemetry")
     
     private var packetCount = 0
-    private var timer: Timer?
+    private var metricsTimer: Timer?
     private var reconnectTimer: Timer?
     
     // Default connection parameters
@@ -47,6 +47,7 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
                 case .ready:
                     self?.status = .connected
                     self?.startReceiving()
+                    self?.startFlushTimer()
                     self?.startMetricsTimer()
                 case .failed(let error):
                     self?.status = .error(error.localizedDescription)
@@ -89,8 +90,10 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
     }
     
     private func stop() {
-        timer?.invalidate()
-        timer = nil
+        flushTimer?.cancel()
+        flushTimer = nil
+        metricsTimer?.invalidate()
+        metricsTimer = nil
         packetCount = 0
         DispatchQueue.main.async {
             self.packetsPerSecond = 0
@@ -114,14 +117,18 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
     }
     
     private var buffer = Data()
+    
+    // Pending packet queue is only touched on `queue` (receive callback thread).
+    // The flush timer dispatches a snapshot to the main thread at a fixed 60 Hz cadence,
+    // completely independent of when TCP data arrives. This prevents burst buffering
+    // where dozens of packets would accumulate and arrive all at once causing cursor stutter.
     private var pendingPackets: [SpikePacket] = []
-    private var lastBatchDispatchTime: Date = .distantPast
-    private let batchInterval: TimeInterval = 0.016 // 60Hz update rate
+    private var flushTimer: DispatchSourceTimer?
     
     private func processIncomingData(_ data: Data) {
+        // All processing stays on `queue` — no time-gating here
         buffer.append(data)
         
-        // Split by newline
         while let newlineIndex = buffer.firstIndex(of: 10) { // 10 is '\n'
             let packetData = buffer.subdata(in: 0..<newlineIndex)
             buffer.removeSubrange(0...newlineIndex)
@@ -130,23 +137,30 @@ class TCPTelemetryClient: ObservableObject, TelemetryProvider {
                 pendingPackets.append(packet)
             }
         }
-        
-        // Batch dispatch to main thread to avoid overwhelming UI (throttle to ~60Hz)
-        let now = Date()
-        if !pendingPackets.isEmpty && now.timeIntervalSince(lastBatchDispatchTime) >= batchInterval {
-            let packets = pendingPackets
-            pendingPackets.removeAll()
-            lastBatchDispatchTime = now
-            
+    }
+    
+    /// Starts a 60 Hz DispatchSourceTimer that flushes the pending packet queue to the main
+    /// thread on a steady clock tick. This decouples UI updates from TCP burst arrival timing,
+    /// eliminating the cursor buffering / catch-up stutter.
+    private func startFlushTimer() {
+        let source = DispatchSource.makeTimerSource(queue: queue)
+        // Fire every 16.67ms (60 Hz), leeway of 1ms to allow coalescing
+        source.schedule(deadline: .now(), repeating: .milliseconds(16), leeway: .milliseconds(1))
+        source.setEventHandler { [weak self] in
+            guard let self, !self.pendingPackets.isEmpty else { return }
+            let packets = self.pendingPackets
+            self.pendingPackets.removeAll(keepingCapacity: true)
             DispatchQueue.main.async {
                 self.packetCount += packets.count
                 self.onPacketsReceived?(packets)
             }
         }
+        source.resume()
+        flushTimer = source
     }
     
     private func startMetricsTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        metricsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             DispatchQueue.main.async {
                 self?.packetsPerSecond = self?.packetCount ?? 0
                 self?.packetCount = 0
