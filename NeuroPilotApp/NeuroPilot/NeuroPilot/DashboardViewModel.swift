@@ -21,8 +21,10 @@ class DashboardViewModel: ObservableObject {
     @Published var cursorPoint: CGPoint = .zero
     
     // On-device C++ Kalman Decoder (Phase 3)
+    // NOTE: Defaults to false — decoder requires OLS calibration via fit() before use.
+    // Enable via the sidebar toggle after running a Phase 4 calibration session.
     let kalmanDecoder = NPKalmanFilterDecoder(stateDim: 2, obsDim: 100, dt: 0.01)
-    @Published var isDecoderActive: Bool = true
+    @Published var isDecoderActive: Bool = false
     @Published var decodedVelocity: CGPoint = .zero
     
     // Source selection

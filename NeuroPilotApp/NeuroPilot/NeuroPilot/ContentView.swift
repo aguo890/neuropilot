@@ -51,9 +51,9 @@ struct ContentView: View {
                 Section("Decoder Engine (Phase 3)") {
                     HStack {
                         Circle()
-                            .fill(viewModel.isDecoderActive ? Color.green : Color.orange)
+                            .fill(viewModel.isDecoderActive ? Color.green : Color.gray)
                             .frame(width: 8, height: 8)
-                        Text(viewModel.isDecoderActive ? "C++ Kalman Active" : "Simulator Truth")
+                        Text(viewModel.isDecoderActive ? "C++ Kalman Active" : "Simulator Ground Truth")
                             .font(.caption.bold())
                             .foregroundColor(viewModel.isDecoderActive ? .green : .secondary)
                     }
@@ -70,6 +70,11 @@ struct ContentView: View {
                                 .foregroundColor(.green)
                         }
                         .font(.caption)
+                    } else {
+                        Text("Requires Phase 4 calibration to activate on-device decoding.")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
